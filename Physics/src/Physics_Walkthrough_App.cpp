@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include "Camera.h"
+#include "Physics\PhysicsObject.h"
 
 Physics_Walkthrough_App::Physics_Walkthrough_App()
 {
@@ -28,6 +29,10 @@ bool Physics_Walkthrough_App::startup()
 	m_camera->SetPosition(glm::vec3(10, 10, 10));
 	m_camera->Lookat(glm::vec3(0, 0, 0));
 	
+	_physicsObject = new PhysicsObject();
+	_physicsObject->SetPosition(glm::vec3(3.0f));
+	_physicsObject->SetMass(100.0f);
+	_physicsObject->SetAcceleration(glm::vec3(1.0f));
 	return true;
 }
 
@@ -39,7 +44,7 @@ void Physics_Walkthrough_App::shutdown()
 void Physics_Walkthrough_App::update(float deltaTime)
 {
 	m_camera->Update(deltaTime);
-
+	_physicsObject->Update(deltaTime);
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
 
@@ -49,6 +54,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 
 void Physics_Walkthrough_App::draw()
 {
+
 	// wipe the screen to the background colour
 	clearScreen();
 
@@ -56,6 +62,7 @@ void Physics_Walkthrough_App::draw()
 	aie::Gizmos::clear();
 	RenderGizmosGrid();
 	aie::Gizmos::draw(m_camera->GetProjectionView());
+
 }
 
 void Physics_Walkthrough_App::RenderGizmosGrid()
@@ -72,4 +79,6 @@ void Physics_Walkthrough_App::RenderGizmosGrid()
 
 	// add a transform so that we can see the axis
 	aie::Gizmos::addTransform(glm::mat4());
+	aie::Gizmos::addSphere(_physicsObject->GetPosition(), 0.5f, 16, 16, glm::vec4(0, 0, 1, 1));
+	_physicsObject->ApplyForce(glm::vec3(0,5,0));
 }

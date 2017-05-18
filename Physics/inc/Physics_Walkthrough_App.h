@@ -4,7 +4,7 @@
 #include <glm/mat4x4.hpp>
 
 class Camera;
-
+class PhysicsObject;
 class Physics_Walkthrough_App : public aie::Application {
 public:
 
@@ -23,4 +23,5 @@ protected:
 
 	// camera transforms
 	Camera *m_camera = nullptr;
+	PhysicsObject * _physicsObject;
 };
