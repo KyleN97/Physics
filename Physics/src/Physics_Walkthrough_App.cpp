@@ -29,10 +29,11 @@ bool Physics_Walkthrough_App::startup()
 	m_camera->SetPosition(glm::vec3(10, 10, 10));
 	m_camera->Lookat(glm::vec3(0, 0, 0));
 	
-	_physicsObject = new PhysicsObject();
+	_physicsObject = new PhysicsObject();//Create a new phys object
 	_physicsObject->SetPosition(glm::vec3(3.0f));
 	_physicsObject->SetMass(100.0f);
 	_physicsObject->SetAcceleration(glm::vec3(1.0f));
+	//Set the position of the object aswell as the mass and accelation it will use
 	return true;
 }
 
@@ -44,7 +45,8 @@ void Physics_Walkthrough_App::shutdown()
 void Physics_Walkthrough_App::update(float deltaTime)
 {
 	m_camera->Update(deltaTime);
-	_physicsObject->Update(deltaTime);
+	_physicsObject->ApplyForce(glm::vec3(0, 5, 0));//Apply a force to the object every frame
+	_physicsObject->Update(deltaTime);//Update the velocity and position 
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
 
@@ -79,6 +81,5 @@ void Physics_Walkthrough_App::RenderGizmosGrid()
 
 	// add a transform so that we can see the axis
 	aie::Gizmos::addTransform(glm::mat4());
-	aie::Gizmos::addSphere(_physicsObject->GetPosition(), 0.5f, 16, 16, glm::vec4(0, 0, 1, 1));
-	_physicsObject->ApplyForce(glm::vec3(0,5,0));
+	aie::Gizmos::addSphere(_physicsObject->GetPosition(), 0.5f, 16, 16, glm::vec4(0, 0, 1, 1));	
 }
