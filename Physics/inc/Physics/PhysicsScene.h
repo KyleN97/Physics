@@ -18,9 +18,8 @@ public:
 	void AttachAllObjects(std::vector<PhysicsObject*> objects);
 	void AddForceToAllobjects(const glm::vec3& force);
 	void RemoveObject(PhysicsObject* object);
-
 	const std::vector<PhysicsObject*>& GetObjects() {return objects;}
-
+	PhysicsObject* GetObjectAt(int index) { return objects[index]; }
 protected:
 	std::vector<PhysicsObject*> objects;
 	glm::vec3 globalForce;

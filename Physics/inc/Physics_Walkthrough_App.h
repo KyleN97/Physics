@@ -6,6 +6,7 @@
 class Camera;
 class PhysicsObject;
 class PhysicsScene;
+class PhysicsRenderer;
 class Physics_Walkthrough_App : public aie::Application {
 public:
 
@@ -19,11 +20,11 @@ public:
 	virtual void draw();
 
 	void RenderGizmosGrid();
-
 protected:
-
+	int spawnAcross = 0;
+	int deleteCount = 0;
 	// camera transforms
 	Camera *m_camera = nullptr;
 	PhysicsScene* physicsScene;
-	std::vector<PhysicsObject*> physicsObjects;
+	PhysicsRenderer* physicsRenderer;
 };
