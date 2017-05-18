@@ -19,4 +19,6 @@ void PhysicsObject::Update(float deltaTime)
 {
 	this->velocity = this->velocity + acceleration * deltaTime;
 	this->position = this->position + velocity * deltaTime;
+	this->acceleration = glm::vec3();//set acceleration to zero after velocity + position change so we dont keep accelerating
+	//if were no longer applying a force
 }

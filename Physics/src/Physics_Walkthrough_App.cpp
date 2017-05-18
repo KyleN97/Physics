@@ -31,7 +31,7 @@ bool Physics_Walkthrough_App::startup()
 	
 	_physicsObject = new PhysicsObject();//Create a new phys object
 	_physicsObject->SetPosition(glm::vec3(3.0f));
-	_physicsObject->SetMass(100.0f);
+	_physicsObject->SetMass(1.0f);
 	_physicsObject->SetAcceleration(glm::vec3(1.0f));
 	//Set the position of the object aswell as the mass and accelation it will use
 	return true;
@@ -45,13 +45,20 @@ void Physics_Walkthrough_App::shutdown()
 void Physics_Walkthrough_App::update(float deltaTime)
 {
 	m_camera->Update(deltaTime);
-	_physicsObject->ApplyForce(glm::vec3(0, 5, 0));//Apply a force to the object every frame
 	_physicsObject->Update(deltaTime);//Update the velocity and position 
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
 
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
+	if(input->isKeyDown(aie::INPUT_KEY_UP))
+		_physicsObject->ApplyForce(glm::vec3(1, 0, 0));//Apply a force to the object
+	if (input->isKeyDown(aie::INPUT_KEY_LEFT))
+		_physicsObject->ApplyForce(glm::vec3(0, 0, 1));//Apply a force to the object
+	if (input->isKeyDown(aie::INPUT_KEY_DOWN))
+		_physicsObject->ApplyForce(glm::vec3(-1, 0, 0));//Apply a force to the object
+	if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
+		_physicsObject->ApplyForce(glm::vec3(0, 0, -1));//Apply a force to the object
 }
 
 void Physics_Walkthrough_App::draw()
