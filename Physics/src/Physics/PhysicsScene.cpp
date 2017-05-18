@@ -6,16 +6,12 @@ PhysicsScene::PhysicsScene()
 {
 }
 
-
-PhysicsScene::~PhysicsScene()
-{
-}
-
 void PhysicsScene::Update(float deltaTime)
 {
 	for each (PhysicsObject* var in objects)
 	{
 		var->Update(deltaTime);
+		var->ApplyForce(globalForce);
 	}
 }
 
@@ -30,12 +26,17 @@ void PhysicsScene::AttachAllObjects(std::vector<PhysicsObject*> objects)
 		AttachObject(var);
 	}
 }
+void PhysicsScene::AddForceToAllobjects(const glm::vec3& force)
+{
+	globalForce = force;
+}
 void PhysicsScene::RemoveObject(PhysicsObject * object)
 {
-	for (std::vector<PhysicsObject*>::iterator iter = objects.begin(); iter != objects.end(); ++iter)
+	for (auto iter = objects.begin(); iter != objects.end(); ++iter)
 	{
 		if (*iter == object)
 		{
+			delete *iter;
 			objects.erase(iter);
 			break;
 		}

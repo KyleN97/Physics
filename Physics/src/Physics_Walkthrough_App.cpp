@@ -30,11 +30,12 @@ bool Physics_Walkthrough_App::startup()
 	m_camera->Lookat(glm::vec3(0, 0, 0));
 
 	physicsScene = new PhysicsScene();
-	physicsObjects.reserve(64);
+
 	physicsObjects.push_back(new PhysicsObject(glm::vec3(3.0f),1.0f,glm::vec3(1.0f),1.0f));//Create a new phys object	
 	physicsObjects.push_back(new PhysicsObject(glm::vec3(5.0f,5.0f,1.0f), 1.0f, glm::vec3(1.0f), 1.0f));//Create a new phys object
+	
 	physicsScene->AttachAllObjects(physicsObjects);
-		//Set the position of the object aswell as the mass and accelation it will use
+	//Set the position of the object aswell as the mass and accelation it will use
 	return true;
 }
 
