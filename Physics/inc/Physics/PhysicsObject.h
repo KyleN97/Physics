@@ -3,6 +3,12 @@
 class PhysicsObject
 {
 public:
+	PhysicsObject(glm::vec3 _position, float _mass, glm::vec3 _acceleration, float _friction) {
+		this->SetPosition(glm::vec3(_position));
+		this->SetMass(_mass);
+		this->SetAcceleration(_acceleration);
+		this->SetFriction(_friction);
+	}
 	PhysicsObject();
 	~PhysicsObject();
 
@@ -24,11 +30,11 @@ public:
 	void SetFriction(const float& value)		 { friction = value;}//Set the friction of the object
 
 protected:
-	glm::vec3 position;
+	glm::vec3 position = glm::vec3(1.0f);
 	glm::vec3 velocity;
-	glm::vec3 acceleration;
-	float mass;
-	float friction;
+	glm::vec3 acceleration = glm::vec3(1.0f);
+	float mass = 1.0f;
+	float friction = 1.0f;
 	//Default member variables for basic physics
 };
 
