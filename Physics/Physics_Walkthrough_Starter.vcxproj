@@ -92,6 +92,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Physics\AABBCollider.cpp" />
+    <ClCompile Include="src\Physics\SphereCollider.cpp" />
+    <ClCompile Include="src\Physics\Collider.cpp" />
+    <ClCompile Include="src\Physics\PhysicsRenderer.cpp" />
     <ClCompile Include="src\Physics\PhysicsScene.cpp" />
     <ClCompile Include="src\Physics\PhysicsObject.cpp" />
     <ClCompile Include="src\Camera.cpp" />
@@ -99,10 +103,14 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Physics\AABBCollider.h" />
+    <ClInclude Include="inc\Physics\Collider.h" />
     <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\Physics_Walkthrough_App.h" />
     <ClInclude Include="inc\Physics\PhysicsObject.h" />
     <ClInclude Include="inc\Physics\PhysicsScene.h" />
+    <ClInclude Include="inc\Physics\PhysicsRenderer.h" />
+    <ClInclude Include="inc\Physics\SphereCollider.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

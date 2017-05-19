@@ -5,6 +5,11 @@
 class PhysicsScene
 {
 public:
+	struct CollisionInfo
+	{
+		PhysicsObject* objA;
+		PhysicsObject* objB;
+	};
 	PhysicsScene();
 	virtual ~PhysicsScene() {
 		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
@@ -20,8 +25,12 @@ public:
 	void RemoveObject(PhysicsObject* object);
 	const std::vector<PhysicsObject*>& GetObjects() {return objects;}
 	PhysicsObject* GetObjectAt(int index) { return objects[index]; }
+	bool isObjectColliding(PhysicsObject* object);
 protected:
 	std::vector<PhysicsObject*> objects;
 	glm::vec3 globalForce;
+private:
+	void DetectCollisions();
+	std::vector<CollisionInfo> collisions;
 };
 
