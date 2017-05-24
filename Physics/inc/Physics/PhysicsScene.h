@@ -1,5 +1,6 @@
 #pragma once
 #include "Physics\PhysicsObject.h"
+#include "Physics\IntersectData.h"
 #include <vector>
 #include <glm\glm.hpp>
 class PhysicsScene
@@ -9,6 +10,7 @@ public:
 	{
 		PhysicsObject* objA;
 		PhysicsObject* objB;
+		IntersectData intersect;
 	};
 	PhysicsScene();
 	virtual ~PhysicsScene() {
@@ -31,6 +33,7 @@ protected:
 	glm::vec3 globalForce;
 private:
 	void DetectCollisions();
+	void ResolveCollisions();
 	std::vector<CollisionInfo> collisions;
 };
 

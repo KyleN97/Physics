@@ -15,7 +15,7 @@ public:
 	void SetPosition(const glm::vec3 & _position) { position = _position; }
 	void SetRadius(float _radius) { radius = _radius; }
 
-	bool Intersects(Collider* other) const;
+	bool Intersects(Collider* other,IntersectData* intersect) const;
 	virtual void Transform(PhysicsObject* object);
 protected:
 	glm::vec3 position;

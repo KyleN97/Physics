@@ -17,7 +17,9 @@ public:
 	void SetProjection(float fov, float aspect, float near, float far);
 
 	glm::vec3& GetPosition();
-
+	glm::vec3& GetFront() {
+		return m_cameraFront;
+	}
 	float GetYaw();
 	float GetPitch();
 	float GetRoll();

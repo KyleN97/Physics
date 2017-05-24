@@ -24,7 +24,7 @@ bool Physics_Walkthrough_App::startup()
 	setBackgroundColour(0.25f, 0.25f, 0.25f);
 
 	// initialise gizmo primitive counts
-	aie::Gizmos::create(10000, 10000, 10000, 10000);
+	aie::Gizmos::create(1000000, 1000000, 1000000, 1000000);
 
 	// create simple camera transforms
 	m_camera = new Camera();
@@ -34,11 +34,27 @@ bool Physics_Walkthrough_App::startup()
 
 	physicsRenderer = new PhysicsRenderer();
 
+
+
 	physicsScene = new PhysicsScene();
 	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,5.0f,0.0f),1.0f,glm::vec3(1.0f),1.0f,"Cube"));//Create a new phys object	
 	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(0.3f,0.3f,0.3f)));
 	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,0.0f,0.0f), 1.0f, glm::vec3(1.0f), 1.0f,"Floor"));//Create a new phys object
 	physicsScene->GetObjectAt(1)->SetCollider(new AABBCollider(glm::vec3(10.0f,1.0f,10.0f)));
+
+	for (size_t x = 0; x < 10; x++)
+	{
+		for (size_t y = 0; y < 1; y++)
+		{
+			for (size_t z = 0; z < 10; z++)
+			{
+				PhysicsObject* object = new PhysicsObject();
+				object->SetPosition(glm::vec3(x - 5.0f, y + 10, z - 5.0f));
+				object->SetCollider(new SphereCollider(0.3f));
+				physicsScene->AttachObject(object);
+			}
+		}
+	}
 	return true;
 }
 
@@ -79,7 +95,14 @@ void Physics_Walkthrough_App::update(float deltaTime)
 		physicsScene->AttachObject(new PhysicsObject(glm::vec3(spawnAcross, 5.0f, 1.0f), 1.0f, glm::vec3(1.0f), 1.0f));
 		spawnAcross++;
 	}
-		
+	if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
+		PhysicsObject* obj = new PhysicsObject();
+		obj->SetPosition(m_camera->GetPosition());
+		obj->SetVelocity(m_camera->GetFront() * 20.0f);
+		obj->SetCollider(new SphereCollider(0.5f));
+		physicsScene->AttachObject(obj);
+	}
+
 }
 
 void Physics_Walkthrough_App::draw()

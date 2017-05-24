@@ -11,12 +11,12 @@ SphereCollider::SphereCollider() : radius(1.0f), Collider(Type::SPHERE)
 {
 
 }
-bool SphereCollider::Intersects(Collider * other) const
+bool SphereCollider::Intersects(Collider * other, IntersectData* intersect) const
 {
 	switch (other->GetType())
 	{
 	case Type::SPHERE:
-		return SphereToSphereIntersect(this, (SphereCollider*)other);
+		return SphereToSphereIntersect(this, (SphereCollider*)other,intersect);
 	}
 }
 

@@ -8,29 +8,22 @@ PhysicsScene::PhysicsScene()
 
 void PhysicsScene::Update(float deltaTime)
 {
-	for each (PhysicsObject* var in objects)
-	{
+	for each (PhysicsObject* var in objects) {
 		var->ApplyForce(globalForce);
 		var->Update(deltaTime);
 		glm::vec3 pos = var->GetPosition();
 		glm::vec3 vel = var->GetVelocity();
-		if (isObjectColliding(var)) {
-			if (var->GetTag() == "Floor")
-			{
-				std::cout << "Hit Floor...\n";
-				var->SetPosition(glm::vec3(pos.x, 0.0f, pos.z));
-				var->SetVelocity(glm::vec3(vel.x, -vel.y, vel.z));
-			}
-			if (var->GetTag() == "Sphere")
-			{
-				std::cout << "Hit Sphere...\n";
-			}
-
+		//if (isObjectColliding(var)) {
+		if (pos.y < 0.0f) {
+			var->SetPosition(glm::vec3(pos.x, 0.0f, pos.z));
+			var->SetVelocity(glm::vec3(vel.x, -vel.y, vel.z));
 		}
 
+		//}
 	}
 	globalForce = glm::vec3();
 	DetectCollisions();
+	ResolveCollisions();
 }
 
 void PhysicsScene::AttachObject(PhysicsObject * object)
@@ -80,14 +73,44 @@ void PhysicsScene::DetectCollisions()
 		for (auto iterB = iterA + 1; iterB != objects.end(); iterB++)
 		{
 			PhysicsObject* objB = *iterB;
-			if (objA->GetCollider()->Intersects(objB->GetCollider()))
+			CollisionInfo info;
+
+			if (objA->GetCollider()->Intersects(objB->GetCollider(), &info.intersect))
 			{
-				CollisionInfo info;
 				info.objA = objA;
 				info.objB = objB;
 				collisions.push_back(info);
 			}
 		}
+	}
+}
+
+void PhysicsScene::ResolveCollisions()
+{
+	for (auto iter = collisions.begin(); iter != collisions.end(); iter++)
+	{
+		glm::vec3 colNormal = iter->intersect.collisionVector;
+
+		float massA = iter->objA->GetMass();
+		float massB = iter->objB->GetMass();
+
+		glm::vec3 velA = iter->objA->GetVelocity();
+		glm::vec3 velB = iter->objB->GetVelocity();
+
+		glm::vec3 relVel = velA - velB;
+
+		glm::vec3 colVector = colNormal * (glm::dot(relVel, colNormal));
+
+		glm::vec3 impulse = colVector / ((1.0f / massA) + (1.0f / massB));
+
+		iter->objA->ApplyForce(impulse);
+		iter->objB->ApplyForce(-impulse);
+
+		glm::vec3 seperate = iter->intersect.collisionVector  * 0.5f;
+
+		iter->objA->SetPosition(iter->objA->GetPosition() - seperate);
+		iter->objB->SetPosition(iter->objB->GetPosition() + seperate);
+
 	}
 }
 
