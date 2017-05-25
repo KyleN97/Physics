@@ -33,14 +33,13 @@ bool Physics_Walkthrough_App::startup()
 	m_camera->Lookat(glm::vec3(0, 0, 0));
 
 	physicsRenderer = new PhysicsRenderer();
-
-
-
 	physicsScene = new PhysicsScene();
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,5.0f,0.0f),1.0f,glm::vec3(1.0f),1.0f,"Cube"));//Create a new phys object	
+
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,5.0f,0.0f),1.0f,glm::vec3(1.0f),1.0f, true));//Create a new phys object with physics
 	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(0.3f,0.3f,0.3f)));
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,0.0f,0.0f), 1.0f, glm::vec3(1.0f), 1.0f,"Floor"));//Create a new phys object
-	physicsScene->GetObjectAt(1)->SetCollider(new AABBCollider(glm::vec3(10.0f,1.0f,10.0f)));
+
+	//physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,0.0f,0.0f), 1.0f, glm::vec3(1.0f), 1.0f));//Create a new phys object
+	//physicsScene->GetObjectAt(1)->SetCollider(new AABBCollider(glm::vec3(10.0f,1.0f,10.0f)));
 
 	for (size_t x = 0; x < 10; x++)
 	{
@@ -48,13 +47,26 @@ bool Physics_Walkthrough_App::startup()
 		{
 			for (size_t z = 0; z < 10; z++)
 			{
-				PhysicsObject* object = new PhysicsObject();
+				PhysicsObject* object = new PhysicsObject(true);//Enabling phyiscs
 				object->SetPosition(glm::vec3(x - 5.0f, y + 10, z - 5.0f));
 				object->SetCollider(new SphereCollider(0.3f));
 				physicsScene->AttachObject(object);
 			}
 		}
 	}
+	//for (size_t x = 0; x < 10; x++)
+	//{
+	//	for (size_t y = 0; y < 1; y++)
+	//	{
+	//		for (size_t z = 0; z < 10; z++)
+	//		{
+	//			PhysicsObject* object = new PhysicsObject(true);//Enabling phyiscs
+	//			object->SetPosition(glm::vec3(x - 5.0f, y + 20, z - 5.0f));
+	//			object->SetCollider(new AABBCollider(glm::vec3(0.3f)));
+	//			physicsScene->AttachObject(object);
+	//		}
+	//	}
+	//}
 	return true;
 }
 
@@ -74,7 +86,6 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	physicsScene->Update(deltaTime);
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
-
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
 	if(input->isKeyDown(aie::INPUT_KEY_UP))
@@ -96,7 +107,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 		spawnAcross++;
 	}
 	if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
-		PhysicsObject* obj = new PhysicsObject();
+		PhysicsObject* obj = new PhysicsObject(true);//enabling physics
 		obj->SetPosition(m_camera->GetPosition());
 		obj->SetVelocity(m_camera->GetFront() * 20.0f);
 		obj->SetCollider(new SphereCollider(0.5f));

@@ -14,7 +14,8 @@ PhysicsObject::~PhysicsObject()
 
 void PhysicsObject::ApplyForce(glm::vec3 force)
 {
-	this->acceleration += force / mass;
+	if (this->GetIsPhysicsEnabled())
+		this->acceleration += force / mass;
 }
 Collider * PhysicsObject::GetCollider()
 {
@@ -32,7 +33,7 @@ void PhysicsObject::SetCollider(Collider * _collider)
 }
 void PhysicsObject::Update(float deltaTime) 
 {
-	if (collider->GetType() == Collider::SPHERE || collider->GetType() == Collider::NONE || this->GetTag() =="Cube") {
+	if (this->GetIsPhysicsEnabled()) {
 		ApplyForce(-velocity * friction);//Slow the object down according to friction
 		this->velocity = this->velocity + acceleration * deltaTime;
 		this->position = this->position + velocity * deltaTime;

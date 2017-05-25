@@ -5,11 +5,21 @@ class Collider;
 class PhysicsObject
 {
 public:
+	PhysicsObject(bool _isPhysicsEnabled) {
+		this->SetIsPhysicsEnabled(_isPhysicsEnabled);
+	}
 	PhysicsObject(glm::vec3 _position, float _mass, glm::vec3 _acceleration, float _friction) {
 		this->SetPosition(glm::vec3(_position));
 		this->SetMass(_mass);
 		this->SetAcceleration(_acceleration);
 		this->SetFriction(_friction);
+	}
+	PhysicsObject(glm::vec3 _position, float _mass, glm::vec3 _acceleration, float _friction,bool _isPhysicsEnabled) {
+		this->SetPosition(glm::vec3(_position));
+		this->SetMass(_mass);
+		this->SetAcceleration(_acceleration);
+		this->SetFriction(_friction);
+		this->SetIsPhysicsEnabled(_isPhysicsEnabled);
 	}
 	PhysicsObject(glm::vec3 _position, float _mass, glm::vec3 _acceleration, float _friction,std::string _tag) {
 		this->SetPosition(glm::vec3(_position));
@@ -17,6 +27,14 @@ public:
 		this->SetAcceleration(_acceleration);
 		this->SetFriction(_friction);
 		this->SetTag(_tag);
+	}
+	PhysicsObject(glm::vec3 _position, float _mass, glm::vec3 _acceleration, float _friction, std::string _tag,bool _isPhysicsEnabled) {
+		this->SetPosition(glm::vec3(_position));
+		this->SetMass(_mass);
+		this->SetAcceleration(_acceleration);
+		this->SetFriction(_friction);
+		this->SetTag(_tag);
+		this->SetIsPhysicsEnabled(_isPhysicsEnabled);
 	}
 	PhysicsObject();
 	~PhysicsObject();
@@ -31,6 +49,7 @@ public:
 	const float GetFriction()			const { return friction; }//Get the friction of the object
 	Collider* GetCollider();//Get the current collider attatched to the current Phys object.
 	const std::string GetTag() const { return tag; }
+	const bool GetIsPhysicsEnabled() const { return isPhysicsEnabled; }
 	void SetPosition(const glm::vec3& value) { position = value; }//Set the positon of the object
 	void SetVelocity(const glm::vec3& value) { velocity = value; }//Set the velocity of the object...(Should not be used directly
 	//if you want to change the velocity you should add a force of some sort).
@@ -39,7 +58,7 @@ public:
 	void SetFriction(const float& value) { friction = value; }//Set the friction of the object
 	void SetCollider(Collider* _collider);//Set the current Phys objects collider
 	void SetTag(std::string _tag) { tag = _tag; }
-
+	void SetIsPhysicsEnabled(bool _isPhysicsEnabled) { isPhysicsEnabled = _isPhysicsEnabled; }
 protected:
 	glm::vec3 position;
 	glm::vec3 velocity;
@@ -48,6 +67,7 @@ protected:
 	float friction = 1.0f;
 	Collider* collider = nullptr;
 	std::string tag = "null";
+	bool isPhysicsEnabled = false;
 	//Default member variables for basic physics
 };
 

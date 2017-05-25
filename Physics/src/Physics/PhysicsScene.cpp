@@ -8,18 +8,23 @@ PhysicsScene::PhysicsScene()
 
 void PhysicsScene::Update(float deltaTime)
 {
+	//updatae constraints
+	for each (Constraint* var in constraints)
+	{
+		var->Update(deltaTime);//make sure this update is using deltatime.... or remove it
+	}
+	//
 	for each (PhysicsObject* var in objects) {
+
+		var->SetAcceleration(gravAccel);
 		var->ApplyForce(globalForce);
 		var->Update(deltaTime);
 		glm::vec3 pos = var->GetPosition();
 		glm::vec3 vel = var->GetVelocity();
-		//if (isObjectColliding(var)) {
 		if (pos.y < 0.0f) {
 			var->SetPosition(glm::vec3(pos.x, 0.0f, pos.z));
 			var->SetVelocity(glm::vec3(vel.x, -vel.y, vel.z));
 		}
-
-		//}
 	}
 	globalForce = glm::vec3();
 	DetectCollisions();
@@ -30,6 +35,7 @@ void PhysicsScene::AttachObject(PhysicsObject * object)
 {
 	objects.push_back(object);
 }
+
 void PhysicsScene::AttachAllObjects(std::vector<PhysicsObject*> objects)
 {
 	for each (PhysicsObject* var in objects)
@@ -37,10 +43,12 @@ void PhysicsScene::AttachAllObjects(std::vector<PhysicsObject*> objects)
 		AttachObject(var);
 	}
 }
+
 void PhysicsScene::AddForceToAllobjects(const glm::vec3& force)
 {
 	globalForce = force;
 }
+
 void PhysicsScene::RemoveObject(PhysicsObject * object)
 {
 	for (auto iter = objects.begin(); iter != objects.end(); ++iter)
@@ -53,6 +61,7 @@ void PhysicsScene::RemoveObject(PhysicsObject * object)
 		}
 	}
 }
+
 bool PhysicsScene::isObjectColliding(PhysicsObject * object)
 {
 	for (auto iter = collisions.begin(); iter != collisions.end(); iter++)
@@ -64,6 +73,24 @@ bool PhysicsScene::isObjectColliding(PhysicsObject * object)
 	}
 	return false;
 }
+
+void PhysicsScene::AttatchConstraint(Constraint * con)
+{
+	auto iter = std::find(constraints.begin(), constraints.end(), con);
+	if (iter == constraints.end()){
+		constraints.push_back(con);
+	}
+}
+
+void PhysicsScene::RemoveConstraint(Constraint * con)
+{
+	auto iter = std::find(constraints.begin(), constraints.end(), con);
+	if (iter != constraints.end()) {
+		delete *iter;
+		constraints.erase(iter);
+	}
+}
+
 void PhysicsScene::DetectCollisions()
 {
 	collisions.clear();
@@ -110,6 +137,7 @@ void PhysicsScene::ResolveCollisions()
 
 		iter->objA->SetPosition(iter->objA->GetPosition() - seperate);
 		iter->objB->SetPosition(iter->objB->GetPosition() + seperate);
+		//Change from set position make it dependent on objects mass etc - Massive object vs small object
 
 	}
 }
