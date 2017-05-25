@@ -69,7 +69,7 @@ bool Physics_Walkthrough_App::startup()
 	//	}
 	//}
 
-	PhysicsObject* left = new PhysicsObject(true);
+	/*PhysicsObject* left = new PhysicsObject(true);
 	left->SetPosition(glm::vec3(-10, 1, 0));
 	left->SetCollider(new SphereCollider(1.0f));
 	physicsScene->AttachObject(left);
@@ -80,12 +80,12 @@ bool Physics_Walkthrough_App::startup()
 	physicsScene->AttachObject(right);
 
 	PhysicsObject* top = new PhysicsObject(true);
-	top->SetPosition(glm::vec3(0, 3, 0));
+	top->SetPosition(glm::vec3(0, 10, 0));
 	top->SetCollider(new SphereCollider(1.0f));
 	physicsScene->AttachObject(top);
 	
 	PhysicsObject* back = new PhysicsObject(true);
-	back->SetPosition(glm::vec3(0, 1, 2));
+	back->SetPosition(glm::vec3(0, -10, 0));
 	back->SetCollider(new SphereCollider(1.0f));
 	physicsScene->AttachObject(back);
 
@@ -109,7 +109,88 @@ bool Physics_Walkthrough_App::startup()
 	physicsScene->AttatchConstraint(spring6);
 	
 	Spring* spring7 = new Spring(right, top, 7.0f, 200, 1);
-	physicsScene->AttatchConstraint(spring7);
+	physicsScene->AttatchConstraint(spring7);*/
+	const int maxX = 3;
+	const int maxY = 3;
+	const int maxZ = 3;
+	PhysicsObject* blob[maxX][maxY][maxZ];
+
+	for (int x = 0; x < maxX; x++)	//Do Height Last
+	{
+		for (int y = 0; y < maxY; y++)
+		{
+			for (int z = 0; z < maxZ; z++)
+			{
+				PhysicsObject *obj = new PhysicsObject(true);
+				obj->SetPosition(glm::vec3(x, y, z));
+				obj->SetCollider(new SphereCollider(0.3f));
+				blob[x][y][z] = obj;
+				physicsScene->AttachObject(obj);
+			}
+		}
+	}
+
+	for (int x = 0; x < maxX; x++)
+	{
+		for (int y = 0; y < maxY; y++)
+		{
+			for (int z = 0; z < maxZ; z++)
+			{
+				if (y < 2)	//Up
+				{
+					Spring *spring = new Spring(blob[x][y][z], blob[x][y + 1][z], 1, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				if (x < 2)	//Right
+				{
+					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y][z], 1, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				if (z < 2)	//Left
+				{
+					Spring *spring = new Spring(blob[x][y][z], blob[x][y][z + 1], 1, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				//Z and X
+				if (z < 2 && x < 2)
+				{
+					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y][z + 1], 1.5, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				
+				if (z < 2 && x < 2)
+				{
+					Spring *spring = new Spring(blob[x][y][z + 1], blob[x + 1][y][z], 1.5, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				//---
+				//Z and Y
+				if (z < 2 && y < 2)
+				{
+					Spring *spring = new Spring(blob[x][y][z], blob[x][y + 1][z + 1], 1.5, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				if (z < 2 && y < 2)
+				{
+					Spring *spring = new Spring(blob[x][y + 1][z], blob[x][y][z + 1], 1.5, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				//---
+				//X and Y
+				if (x < 2 && y < 2)
+				{
+					Spring *spring = new Spring(blob[x][y + 1][z], blob[x  + 1][y][z], 1.5, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				if (x < 2 && y < 2)
+				{
+					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y  + 1][z], 1.5, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				//---
+			}
+		}
+	}
 
 	return true;
 }
