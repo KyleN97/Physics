@@ -187,6 +187,16 @@ bool Physics_Walkthrough_App::startup()
 					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y  + 1][z], 1.5, 200, 1);
 					physicsScene->AttatchConstraint(spring);
 				}
+				if (x < 2 && y < 2 && z < 2)
+				{
+					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y + 1][z + 1], 1.5, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
+				if (x < 2 && y < 2 && z < 2)
+				{
+					Spring *spring = new Spring(blob[x][y + 1][z], blob[x + 1][y][z + 1], 1.5, 200, 1);
+					physicsScene->AttatchConstraint(spring);
+				}
 				//---
 			}
 		}
@@ -232,7 +242,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 		spawnAcross++;
 	}
 	if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
-		PhysicsObject* obj = new PhysicsObject(true,5.0f);//enabling physics
+		PhysicsObject* obj = new PhysicsObject(true,2.0f);//enabling physics
 		obj->SetPosition(m_camera->GetPosition());
 		obj->SetVelocity(m_camera->GetFront() * 20.0f);
 		obj->SetCollider(new SphereCollider(0.5f));
