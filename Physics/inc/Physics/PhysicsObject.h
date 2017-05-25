@@ -8,6 +8,10 @@ public:
 	PhysicsObject(bool _isPhysicsEnabled) {
 		this->SetIsPhysicsEnabled(_isPhysicsEnabled);
 	}
+	PhysicsObject(bool _isPhysicsEnabled,float _lifetime) {
+		this->SetIsPhysicsEnabled(_isPhysicsEnabled);
+		this->SetLifeTime(_lifetime,true);
+	}
 	PhysicsObject(glm::vec3 _position, float _mass, glm::vec3 _acceleration, float _friction) {
 		this->SetPosition(glm::vec3(_position));
 		this->SetMass(_mass);
@@ -45,6 +49,8 @@ public:
 	const glm::vec3 GetPosition()		const { return position; }//Get position of the object
 	const glm::vec3 GetVelocity()		const { return velocity; }//Get the velocity of the object
 	const glm::vec3 GetAcceleration()	const { return acceleration; }//Get the acceleration of the object
+	const float GetRemainingLifetime() const { return lifetime; }
+	const bool GetLifetime() const { return hasLifeTime; }
 	const float GetMass()				const { return mass; }//Get the mass of the object
 	const float GetFriction()			const { return friction; }//Get the friction of the object
 	Collider* GetCollider();//Get the current collider attatched to the current Phys object.
@@ -59,6 +65,7 @@ public:
 	void SetCollider(Collider* _collider);//Set the current Phys objects collider
 	void SetTag(std::string _tag) { tag = _tag; }
 	void SetIsPhysicsEnabled(bool _isPhysicsEnabled) { isPhysicsEnabled = _isPhysicsEnabled; }
+	void SetLifeTime(float _lifetime, bool _hasLifeTime) { lifetime = _lifetime; hasLifeTime = _hasLifeTime; }
 protected:
 	glm::vec3 position;
 	glm::vec3 velocity;
@@ -68,6 +75,8 @@ protected:
 	Collider* collider = nullptr;
 	std::string tag = "null";
 	bool isPhysicsEnabled = false;
+	float lifetime = 5.0f;
+	float hasLifeTime = false;
 	//Default member variables for basic physics
 };
 

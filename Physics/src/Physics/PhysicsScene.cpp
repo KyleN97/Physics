@@ -9,14 +9,14 @@ PhysicsScene::PhysicsScene()
 void PhysicsScene::Update(float deltaTime)
 {
 	//updatae constraints
-	for each (Constraint* var in constraints)
+	for each (Constraint* con in constraints)
 	{
-		var->Update(deltaTime);//make sure this update is using deltatime.... or remove it
+		con->Update(deltaTime);//make sure this update is using deltatime.... or remove it
 	}
 	//
 	for each (PhysicsObject* var in objects) {
-
-		var->SetAcceleration(gravAccel);
+		glm::vec3 currAccel = var->GetAcceleration();
+		var->SetAcceleration(currAccel + gravAccel);
 		var->ApplyForce(globalForce);
 		var->Update(deltaTime);
 		glm::vec3 pos = var->GetPosition();
@@ -25,10 +25,20 @@ void PhysicsScene::Update(float deltaTime)
 			var->SetPosition(glm::vec3(pos.x, 0.0f, pos.z));
 			var->SetVelocity(glm::vec3(vel.x, -vel.y, vel.z));
 		}
+		if (var->GetLifetime() == true)
+		{
+			var->SetLifeTime(var->GetRemainingLifetime() - deltaTime, true);
+			if (var->GetRemainingLifetime() <= 0.0f)
+			{
+				RemoveObject(var);
+				break;
+			}
+		}
 	}
 	globalForce = glm::vec3();
 	DetectCollisions();
 	ResolveCollisions();
+
 }
 
 void PhysicsScene::AttachObject(PhysicsObject * object)

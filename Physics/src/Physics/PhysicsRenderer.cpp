@@ -33,5 +33,13 @@ void PhysicsRenderer::Draw(PhysicsScene * scene)
 				aie::Gizmos::addSphere(var->GetPosition(), 0.1f, 16, 16, glm::vec4(1,0,1,1));
 				break;
 		}
+		for each (Constraint* var in scene->GetConstraints())
+		{
+			switch (var->GetType())
+			{
+			case Constraint::Type::SPRING:
+				aie::Gizmos::addLine(var->GetObjects()[0]->GetPosition(), var->GetObjects()[1]->GetPosition(), glm::vec4(0, 0, 1, 1));
+			}
+		}
 	}
 }

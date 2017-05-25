@@ -20,6 +20,12 @@ public:
 			delete *iter;
 		}
 		objects.clear();
+
+		for (auto iter = constraints.begin(); iter != constraints.end(); ++iter)
+		{
+			delete *iter;
+		}
+		constraints.clear();
 	};
 	void Update(float deltaTime);
 	void AddForceToAllobjects(const glm::vec3& force);
