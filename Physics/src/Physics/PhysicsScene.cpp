@@ -21,8 +21,8 @@ void PhysicsScene::Update(float deltaTime)
 		var->Update(deltaTime);
 		glm::vec3 pos = var->GetPosition();
 		glm::vec3 vel = var->GetVelocity();
-		if (pos.y < 0.0f) {
-			var->SetPosition(glm::vec3(pos.x, 0.0f, pos.z));
+		if (pos.y < 0.5f) {
+			var->SetPosition(glm::vec3(pos.x, 0.5f, pos.z));
 			var->SetVelocity(glm::vec3(vel.x, -vel.y, vel.z));
 		}
 		if (var->GetLifetime() == true)

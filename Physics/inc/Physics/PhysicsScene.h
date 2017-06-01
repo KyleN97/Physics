@@ -7,12 +7,6 @@
 class PhysicsScene
 {
 public:
-	struct CollisionInfo
-	{
-		PhysicsObject* objA;
-		PhysicsObject* objB;
-		IntersectData intersect;
-	};
 	PhysicsScene();
 	virtual ~PhysicsScene() {
 		for (auto iter = objects.begin(); iter != objects.end(); ++iter)
@@ -27,18 +21,25 @@ public:
 		}
 		constraints.clear();
 	};
-	void Update(float deltaTime);
-	void AddForceToAllobjects(const glm::vec3& force);
-	bool isObjectColliding(PhysicsObject* object);
 
+	struct CollisionInfo
+	{
+		PhysicsObject* objA;
+		PhysicsObject* objB;
+		IntersectData intersect;
+	};
+
+	void Update(float deltaTime);
+	void AddForceToAllobjects(const glm::vec3& force);	
 	void AttachObject(PhysicsObject* object);
 	void AttachAllObjects(std::vector<PhysicsObject*> objects);
-	const std::vector<PhysicsObject*>& GetObjects() { return objects; }
 	void RemoveObject(PhysicsObject* object);
-	PhysicsObject* GetObjectAt(int index) { return objects[index]; }
-
 	void AttatchConstraint(Constraint* con);
 	void RemoveConstraint(Constraint* con);
+
+	bool isObjectColliding(PhysicsObject* object);
+	const std::vector<PhysicsObject*>& GetObjects() { return objects; }
+	PhysicsObject* GetObjectAt(int index) { return objects[index]; }
 	const std::vector<Constraint*>& GetConstraints() { return constraints; }
 
 protected:

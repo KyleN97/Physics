@@ -17,12 +17,12 @@ AABBCollider::~AABBCollider()
 {
 }
 
-bool AABBCollider::Intersects(Collider * other) const
+bool AABBCollider::Intersects(Collider * other,IntersectData* intersect) const
 {
 	switch (other->GetType())
 	{
-	case Type::AABB:
-		return AABBTOAABBIntersect(this, (AABBCollider*)other);
+		case Type::AABB:
+			return AABBTOAABBIntersect(this, (AABBCollider*)other,intersect);
 	}
 }
 

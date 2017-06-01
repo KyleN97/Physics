@@ -14,20 +14,21 @@ PhysicsRenderer::~PhysicsRenderer()
 
 void PhysicsRenderer::Draw(PhysicsScene * scene)
 {
-
 	for each (PhysicsObject* var in scene->GetObjects())
 	{
-	
+		if (scene->isObjectColliding(var)) {
+			SetRenderColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+		}
 		switch (var->GetCollider()->GetType())
 		{
 			case Collider::Type::SPHERE:
-				aie::Gizmos::addSphere(var->GetPosition(), ((SphereCollider*)var->GetCollider())->GetRadius(), 16, 16, glm::vec4(1,0,1,1));
+				aie::Gizmos::addSphere(var->GetPosition(), ((SphereCollider*)var->GetCollider())->GetRadius(), 16, 16, glm::vec4(1, 0, 1, 1));
 				break;
 			case Collider::Type::AABB:
 				if(var->GetTag() != "Cube")
-					aie::Gizmos::addAABBFilled(var->GetPosition(),((AABBCollider*)var->GetCollider())->GetSize(),glm::vec4(1,0,0,1));
+					aie::Gizmos::addAABBFilled(var->GetPosition(),((AABBCollider*)var->GetCollider())->GetSize(),GetRenderColor());
 				else
-					aie::Gizmos::addAABBFilled(var->GetPosition(), ((AABBCollider*)var->GetCollider())->GetSize(), glm::vec4(1, 1, 0, 1));
+					aie::Gizmos::addAABBFilled(var->GetPosition(), ((AABBCollider*)var->GetCollider())->GetSize(), GetRenderColor());
 				break;
 			case Collider::Type::NONE:
 				aie::Gizmos::addSphere(var->GetPosition(), 0.1f, 16, 16, glm::vec4(1,0,1,1));

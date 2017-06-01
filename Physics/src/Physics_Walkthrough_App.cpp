@@ -36,80 +36,13 @@ bool Physics_Walkthrough_App::startup()
 	physicsRenderer = new PhysicsRenderer();
 	physicsScene = new PhysicsScene();
 
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,5.0f,0.0f),1.0f,glm::vec3(1.0f),1.0f, true));//Create a new phys object with physics
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,0.5f,0.0f),1.0f,glm::vec3(1.0f),1.0f, false));//Create a new phys object with physics
 	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(0.3f,0.3f,0.3f)));
 
-	//physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,0.0f,0.0f), 1.0f, glm::vec3(1.0f), 1.0f));//Create a new phys object
-	//physicsScene->GetObjectAt(1)->SetCollider(new AABBCollider(glm::vec3(10.0f,1.0f,10.0f)));
 
-	//for (size_t x = 0; x < 10; x++)
-	//{
-	//	for (size_t y = 0; y < 1; y++)
-	//	{
-	//		for (size_t z = 0; z < 10; z++)
-	//		{
-	//			PhysicsObject* object = new PhysicsObject(true);//Enabling phyiscs
-	//			object->SetPosition(glm::vec3(x - 5.0f, y + 10, z - 5.0f));
-	//			object->SetCollider(new SphereCollider(0.3f));
-	//			physicsScene->AttachObject(object);
-	//		}
-	//	}
-	//}
-	//for (size_t x = 0; x < 10; x++)
-	//{
-	//	for (size_t y = 0; y < 1; y++)
-	//	{
-	//		for (size_t z = 0; z < 10; z++)
-	//		{
-	//			PhysicsObject* object = new PhysicsObject(true);//Enabling phyiscs
-	//			object->SetPosition(glm::vec3(x - 5.0f, y + 20, z - 5.0f));
-	//			object->SetCollider(new AABBCollider(glm::vec3(0.3f)));
-	//			physicsScene->AttachObject(object);
-	//		}
-	//	}
-	//}
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f, 10.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
+	physicsScene->GetObjectAt(1)->SetCollider(new AABBCollider(glm::vec3(0.3f)));
 
-	/*PhysicsObject* left = new PhysicsObject(true);
-	left->SetPosition(glm::vec3(-10, 1, 0));
-	left->SetCollider(new SphereCollider(1.0f));
-	physicsScene->AttachObject(left);
-
-	PhysicsObject* right = new PhysicsObject(true);
-	right->SetPosition(glm::vec3(10, 1, 0));
-	right->SetCollider(new SphereCollider(1.0f));
-	physicsScene->AttachObject(right);
-
-	PhysicsObject* top = new PhysicsObject(true);
-	top->SetPosition(glm::vec3(0, 10, 0));
-	top->SetCollider(new SphereCollider(1.0f));
-	physicsScene->AttachObject(top);
-	
-	PhysicsObject* back = new PhysicsObject(true);
-	back->SetPosition(glm::vec3(0, -10, 0));
-	back->SetCollider(new SphereCollider(1.0f));
-	physicsScene->AttachObject(back);
-
-	Spring* spring = new Spring(left, right,7.0f,200,1);
-	physicsScene->AttatchConstraint(spring);
-
-	Spring* spring2 = new Spring(left, back, 7.0f, 200, 1);
-	physicsScene->AttatchConstraint(spring2);
-	
-	Spring* spring3 = new Spring(left, top, 7.0f, 200, 1);
-	physicsScene->AttatchConstraint(spring3);
-	
-	Spring* spring4 = new Spring(left, top, 7.0f, 200, 1);
-	physicsScene->AttatchConstraint(spring4);
-	
-	Spring* spring5 = new Spring(right, back, 7.0f, 200, 1);
-	physicsScene->AttatchConstraint(spring5);
-	
-	
-	Spring* spring6 = new Spring(top, back, 7.0f, 200, 1);
-	physicsScene->AttatchConstraint(spring6);
-	
-	Spring* spring7 = new Spring(right, top, 7.0f, 200, 1);
-	physicsScene->AttatchConstraint(spring7);*/
 	const int maxX = 3;
 	const int maxY = 3;
 	const int maxZ = 3;
@@ -187,6 +120,8 @@ bool Physics_Walkthrough_App::startup()
 					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y  + 1][z], 1.5, 200, 1);
 					physicsScene->AttatchConstraint(spring);
 				}
+				//---
+				//x and y and z
 				if (x < 2 && y < 2 && z < 2)
 				{
 					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y + 1][z + 1], 1.5, 200, 1);
