@@ -23,6 +23,9 @@ bool AABBCollider::Intersects(Collider * other,IntersectData* intersect) const
 	{
 		case Type::AABB:
 			return AABBTOAABBIntersect(this, (AABBCollider*)other,intersect);
+			break;
+		default:
+			return false;
 	}
 }
 

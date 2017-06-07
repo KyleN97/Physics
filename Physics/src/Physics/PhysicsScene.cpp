@@ -76,8 +76,14 @@ bool PhysicsScene::isObjectColliding(PhysicsObject * object)
 {
 	for (auto iter = collisions.begin(); iter != collisions.end(); iter++)
 	{
-		if ((*iter).objA == object || (*iter).objB == object)
+		if ((*iter).objA == object)
 		{
+			std::cout << (*iter).objA->GetTag() + " is colliding with " + object->GetTag() << std::endl;
+			return true;
+		}
+		else if ((*iter).objB == object)
+		{
+			std::cout << (*iter).objB->GetTag() + " is colliding with " + object->GetTag() << std::endl;
 			return true;
 		}
 	}
@@ -87,7 +93,7 @@ bool PhysicsScene::isObjectColliding(PhysicsObject * object)
 void PhysicsScene::AttatchConstraint(Constraint * con)
 {
 	auto iter = std::find(constraints.begin(), constraints.end(), con);
-	if (iter == constraints.end()){
+	if (iter == constraints.end()) {
 		constraints.push_back(con);
 	}
 }
@@ -111,13 +117,22 @@ void PhysicsScene::DetectCollisions()
 		{
 			PhysicsObject* objB = *iterB;
 			CollisionInfo info;
+			//if (objA->GetCollider()->GetType() == Collider::Type::AABB && objB->GetCollider()->GetType() == Collider::Type::AABB) {
+			//	if (objA->GetCollider()->Intersects(objB->GetCollider(),&info.intersect))
+			//	{
+			//		info.objA = objA;
+			//		info.objB = objB;
+			//		collisions.push_back(info);
+			//	}
 
+			//}
 			if (objA->GetCollider()->Intersects(objB->GetCollider(), &info.intersect))
 			{
 				info.objA = objA;
 				info.objB = objB;
 				collisions.push_back(info);
 			}
+
 		}
 	}
 }
@@ -141,12 +156,15 @@ void PhysicsScene::ResolveCollisions()
 		glm::vec3 impulse = colVector / ((1.0f / massA) + (1.0f / massB));
 
 		iter->objA->ApplyForce(impulse);
+
 		iter->objB->ApplyForce(-impulse);
 
 		glm::vec3 seperate = iter->intersect.collisionVector  * 0.5f;
 
 		iter->objA->SetPosition(iter->objA->GetPosition() - seperate);
+
 		iter->objB->SetPosition(iter->objB->GetPosition() + seperate);
+
 		//Change from set position make it dependent on objects mass etc - Massive object vs small object
 
 	}

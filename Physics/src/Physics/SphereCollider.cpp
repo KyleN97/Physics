@@ -16,7 +16,10 @@ bool SphereCollider::Intersects(Collider * other, IntersectData* intersect) cons
 	switch (other->GetType())
 	{
 	case Type::SPHERE:
-		return SphereToSphereIntersect(this, (SphereCollider*)other,intersect);
+		return SphereToSphereIntersect(this, (SphereCollider*)other, intersect);
+		break;
+	default:
+		return false;
 	}
 }
 

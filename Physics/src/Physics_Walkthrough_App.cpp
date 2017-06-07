@@ -10,6 +10,7 @@
 #include "Physics\SphereCollider.h"
 #include "Physics\AABBCollider.h"
 #include "Physics\Spring.h"
+#include <iostream>
 Physics_Walkthrough_App::Physics_Walkthrough_App()
 {
 
@@ -36,18 +37,21 @@ bool Physics_Walkthrough_App::startup()
 	physicsRenderer = new PhysicsRenderer();
 	physicsScene = new PhysicsScene();
 
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,0.5f,0.0f),1.0f,glm::vec3(1.0f),1.0f, false));//Create a new phys object with physics
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f,0.0f,0.0f),1.0f,glm::vec3(1.0f),1.0f, false));//Create a new phys object with physics
 	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(0.3f,0.3f,0.3f)));
-
-
+	physicsScene->GetObjectAt(0)->SetTag("Cube1");
+	
+	
 	physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f, 10.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
 	physicsScene->GetObjectAt(1)->SetCollider(new AABBCollider(glm::vec3(0.3f)));
+	physicsScene->GetObjectAt(1)->SetTag("Cube2");
 
+	
 	const int maxX = 3;
 	const int maxY = 3;
 	const int maxZ = 3;
 	PhysicsObject* blob[maxX][maxY][maxZ];
-
+	
 	for (int x = 0; x < maxX; x++)	//Do Height Last
 	{
 		for (int y = 0; y < maxY; y++)
@@ -56,6 +60,7 @@ bool Physics_Walkthrough_App::startup()
 			{
 				PhysicsObject *obj = new PhysicsObject(true);
 				obj->SetPosition(glm::vec3(x, y, z));
+				obj->SetTag("Blob ball " + std::to_string(x) + std::to_string(y) + std::to_string(z));
 				obj->SetCollider(new SphereCollider(0.3f));
 				blob[x][y][z] = obj;
 				physicsScene->AttachObject(obj);
@@ -136,7 +141,7 @@ bool Physics_Walkthrough_App::startup()
 			}
 		}
 	}
-
+	
 	return true;
 }
 
@@ -151,9 +156,7 @@ void Physics_Walkthrough_App::shutdown()
 
 void Physics_Walkthrough_App::update(float deltaTime)
 {
-	m_camera->Update(deltaTime);
-	physicsScene->AddForceToAllobjects(glm::vec3(0,-9.8f,0));
-	physicsScene->Update(deltaTime);
+
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
@@ -181,9 +184,13 @@ void Physics_Walkthrough_App::update(float deltaTime)
 		obj->SetPosition(m_camera->GetPosition());
 		obj->SetVelocity(m_camera->GetFront() * 20.0f);
 		obj->SetCollider(new SphereCollider(0.5f));
+		obj->SetTag("Shotball");
 		physicsScene->AttachObject(obj);
+		std::cout<< "Shot ball\n";
 	}
-
+	m_camera->Update(deltaTime);
+	physicsScene->AddForceToAllobjects(glm::vec3(0, -9.8f, 0));
+	physicsScene->Update(deltaTime);
 }
 
 void Physics_Walkthrough_App::draw()
