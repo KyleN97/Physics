@@ -18,6 +18,9 @@ bool SphereCollider::Intersects(Collider * other, IntersectData* intersect) cons
 	case Type::SPHERE:
 		return SphereToSphereIntersect(this, (SphereCollider*)other, intersect);
 		break;
+	case Type::AABB:
+		return SphereToAABBIntersect(this,(AABBCollider*)other, intersect);
+		break;
 	default:
 		return false;
 	}

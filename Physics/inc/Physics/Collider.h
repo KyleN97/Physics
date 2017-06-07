@@ -1,4 +1,5 @@
 #pragma once
+#include <glm\glm.hpp>
 class PhysicsObject;
 class SphereCollider;
 class AABBCollider;
@@ -22,6 +23,7 @@ public:
 	static bool AABBTOAABBIntersect(const AABBCollider* aabb, const AABBCollider* other, IntersectData* intersect);
 	static bool SphereToAABBIntersect(const SphereCollider* sphere, const AABBCollider* aabb,IntersectData* intersect);
 	static bool SphereToSphereIntersect(const SphereCollider* sphere, const SphereCollider* other, IntersectData* intersect);
+
 protected:
 	Type type;
 };

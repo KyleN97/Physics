@@ -24,6 +24,8 @@ bool AABBCollider::Intersects(Collider * other,IntersectData* intersect) const
 		case Type::AABB:
 			return AABBTOAABBIntersect(this, (AABBCollider*)other,intersect);
 			break;
+		case Type::SPHERE:
+			return SphereToAABBIntersect((SphereCollider*)other, this, intersect);
 		default:
 			return false;
 	}
