@@ -20,9 +20,7 @@ void PhysicsObject::ApplyForce(glm::vec3 force)
 Collider * PhysicsObject::GetCollider()
 {
 	if (collider == nullptr)
-	{
 		return Collider::GetNullInstance();
-	}
 	return collider;
 }
 void PhysicsObject::SetCollider(Collider * _collider)

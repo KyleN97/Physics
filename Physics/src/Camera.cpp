@@ -50,8 +50,8 @@ void Camera::Update(float deltaTime)
 		int mouseXPos, mouseYPos;
 		input->getMouseXY(&mouseXPos, &mouseYPos);
 
-		float deltaMouseX = mouseXPos - m_lastMouseXPos;
-		float deltaMouseY = mouseYPos - m_lastMouseYPos;
+		int deltaMouseX = mouseXPos - m_lastMouseXPos;
+		int deltaMouseY = mouseYPos - m_lastMouseYPos;
 
 		m_cameraYaw += deltaMouseX;
 		m_cameraPitch += deltaMouseY;

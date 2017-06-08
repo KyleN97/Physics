@@ -23,6 +23,9 @@ public:
 protected:
 	int spawnAcross = 0;
 	int deleteCount = 0;
+	float positionObject[3] = { 0 };
+	float lifetimeObject = 0.0f;
+	bool gravityObject = false;
 	// camera transforms
 	Camera *m_camera = nullptr;
 	PhysicsScene* physicsScene;

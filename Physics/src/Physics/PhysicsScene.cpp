@@ -117,15 +117,7 @@ void PhysicsScene::DetectCollisions()
 		{
 			PhysicsObject* objB = *iterB;
 			CollisionInfo info;
-			//if (objA->GetCollider()->GetType() == Collider::Type::AABB && objB->GetCollider()->GetType() == Collider::Type::AABB) {
-			//	if (objA->GetCollider()->Intersects(objB->GetCollider(),&info.intersect))
-			//	{
-			//		info.objA = objA;
-			//		info.objB = objB;
-			//		collisions.push_back(info);
-			//	}
 
-			//}
 			if (objA->GetCollider()->Intersects(objB->GetCollider(), &info.intersect))
 			{
 				info.objA = objA;

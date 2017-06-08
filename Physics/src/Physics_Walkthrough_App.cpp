@@ -11,6 +11,8 @@
 #include "Physics\AABBCollider.h"
 #include "Physics\Spring.h"
 #include <iostream>
+
+#include <imgui.h>
 Physics_Walkthrough_App::Physics_Walkthrough_App()
 {
 
@@ -37,21 +39,21 @@ bool Physics_Walkthrough_App::startup()
 	physicsRenderer = new PhysicsRenderer();
 	physicsScene = new PhysicsScene();
 
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(5.0f,0.0f,0.0f),1.0f,glm::vec3(1.0f),1.0f, false));//Create a new phys object with physics
-	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(0.3f,0.3f,0.3f)));
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, false));//Create a new phys object with physics
+	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(0.3f, 0.3f, 0.3f)));
 	physicsScene->GetObjectAt(0)->SetTag("Cube1");
-	
-	
+
+
 	//physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f, 10.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
 	//physicsScene->GetObjectAt(1)->SetCollider(new AABBCollider(glm::vec3(0.3f)));
 	//physicsScene->GetObjectAt(1)->SetTag("Cube2");
 
-	
+
 	const int maxX = 3;
 	const int maxY = 3;
 	const int maxZ = 3;
 	PhysicsObject* blob[maxX][maxY][maxZ];
-	
+
 	for (int x = 0; x < maxX; x++)	//Do Height Last
 	{
 		for (int y = 0; y < maxY; y++)
@@ -95,7 +97,7 @@ bool Physics_Walkthrough_App::startup()
 					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y][z + 1], 1.5, 200, 1);
 					physicsScene->AttatchConstraint(spring);
 				}
-				
+
 				if (z < 2 && x < 2)
 				{
 					Spring *spring = new Spring(blob[x][y][z + 1], blob[x + 1][y][z], 1.5, 200, 1);
@@ -117,12 +119,12 @@ bool Physics_Walkthrough_App::startup()
 				//X and Y
 				if (x < 2 && y < 2)
 				{
-					Spring *spring = new Spring(blob[x][y + 1][z], blob[x  + 1][y][z], 1.5, 200, 1);
+					Spring *spring = new Spring(blob[x][y + 1][z], blob[x + 1][y][z], 1.5, 200, 1);
 					physicsScene->AttatchConstraint(spring);
 				}
 				if (x < 2 && y < 2)
 				{
-					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y  + 1][z], 1.5, 200, 1);
+					Spring *spring = new Spring(blob[x][y][z], blob[x + 1][y + 1][z], 1.5, 200, 1);
 					physicsScene->AttatchConstraint(spring);
 				}
 				//---
@@ -141,7 +143,7 @@ bool Physics_Walkthrough_App::startup()
 			}
 		}
 	}
-	
+
 	return true;
 }
 
@@ -161,7 +163,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	aie::Input* input = aie::Input::getInstance();
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
-	if(input->isKeyDown(aie::INPUT_KEY_UP))
+	if (input->isKeyDown(aie::INPUT_KEY_UP))
 		physicsScene->GetObjectAt(0)->ApplyForce(glm::vec3(3, 0, 0));//Apply a force to the object
 	if (input->isKeyDown(aie::INPUT_KEY_LEFT))
 		physicsScene->GetObjectAt(0)->ApplyForce(glm::vec3(0, 0, 3));//Apply a force to the object
@@ -172,25 +174,58 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	if (input->wasKeyPressed(aie::INPUT_KEY_ENTER)) {
 		deleteCount = physicsScene->GetObjects().size() - 1;
 		spawnAcross--;
-		if(deleteCount >=0)
+		if (deleteCount >= 0)
 			physicsScene->RemoveObject(physicsScene->GetObjectAt(deleteCount));
 	}
 	if (input->wasKeyPressed(aie::INPUT_KEY_BACKSPACE)) {
 		physicsScene->AttachObject(new PhysicsObject(glm::vec3(spawnAcross, 5.0f, 1.0f), 1.0f, glm::vec3(1.0f), 1.0f));
 		spawnAcross++;
 	}
-	if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
-		PhysicsObject* obj = new PhysicsObject(true,2.0f);//enabling physics
-		obj->SetPosition(m_camera->GetPosition());
-		obj->SetVelocity(m_camera->GetFront() * 20.0f);
-		obj->SetCollider(new SphereCollider(0.5f));
-		obj->SetTag("Shotball");
-		physicsScene->AttachObject(obj);
-		std::cout<< "Shot ball\n";
+	//if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
+	//	PhysicsObject* obj = new PhysicsObject(true,2.0f);//enabling physics
+	//	obj->SetPosition(m_camera->GetPosition());
+	//	obj->SetVelocity(m_camera->GetFront() * 20.0f);
+	//	obj->SetCollider(new SphereCollider(0.5f));
+	//	obj->SetTag("Shotball");
+	//	physicsScene->AttachObject(obj);
+	//	std::cout<< "Shot ball\n";
+	//}
+
+	ImGui::Begin("Object Manager");
+	static int selection = 0;
+	const char* listOfItems[] = { "Sphere","AABB" };
+	ImGui::ListBox("Type of Object", &selection, listOfItems, sizeof(listOfItems) / sizeof(listOfItems[0]),3);
+	ImGui::InputFloat3("Object Position", positionObject);
+	ImGui::Checkbox("Object Gravity?", &gravityObject);
+	ImGui::InputFloat("Object LifeTime - zero = Unlimited", &lifetimeObject);
+	if (ImGui::Button("Create Object"))
+	{
+		if (lifetimeObject == 0) {
+			PhysicsObject *obj = new PhysicsObject(gravityObject);
+			obj->SetPosition(glm::vec3(positionObject[0], positionObject[1], positionObject[2]));
+			if (selection == 1)
+				obj->SetCollider(new AABBCollider(glm::vec3(0.3f)));
+			else
+				obj->SetCollider(new SphereCollider(0.3f));
+			physicsScene->AttachObject(obj);
+		}
+		else {
+			PhysicsObject *obj = new PhysicsObject(gravityObject, lifetimeObject);
+			obj->SetPosition(glm::vec3(positionObject[0], positionObject[1], positionObject[2]));
+			if (selection == 1)
+				obj->SetCollider(new AABBCollider(glm::vec3(0.3f)));
+			else
+				obj->SetCollider(new SphereCollider(0.3f));
+			physicsScene->AttachObject(obj);
+
+		}
 	}
-	m_camera->Update(deltaTime);
+	ImGui::End();
+
+
+	m_camera->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
 	physicsScene->AddForceToAllobjects(glm::vec3(0, -9.8f, 0));
-	physicsScene->Update(deltaTime);
+	physicsScene->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
 }
 
 void Physics_Walkthrough_App::draw()

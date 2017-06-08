@@ -1,5 +1,4 @@
 #pragma once
-#include <glm\glm.hpp>
 class PhysicsObject;
 class SphereCollider;
 class AABBCollider;
