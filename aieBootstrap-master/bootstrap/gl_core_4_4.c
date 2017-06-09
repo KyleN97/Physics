@@ -1567,8 +1567,8 @@ static int Load_Version_4_4()
 	if(!_ptrc_glProgramUniformMatrix3x4fv) numFailed++;
 	_ptrc_glProgramUniformMatrix4dv = (void (CODEGEN_FUNCPTR *)(GLuint, GLint, GLsizei, GLboolean, const GLdouble *))IntGetProcAddress("glProgramUniformMatrix4dv");
 	if(!_ptrc_glProgramUniformMatrix4dv) numFailed++;
-	_ptrc_glProgramUniformMatrix4fv = (void (CODEGEN_FUNCPTR *)(GLuint, GLint, GLsizei, GLboolean, const GLfloat *))IntGetProcAddress("glProgramUniformMatrix4fv");
-	if(!_ptrc_glProgramUniformMatrix4fv) numFailed++;
+	_ptrc_glProgramUniformMatrix4fv = (void (CODEGEN_FUNCPTR *)(GLuint, GLint, GLsizei, GLboolean, const GLfloat *))IntGetProcAddress("glProgramUniformglm::mat4v");
+	if(_ptrc_glProgramUniformMatrix4fv) numFailed++;
 	_ptrc_glProgramUniformMatrix4x2dv = (void (CODEGEN_FUNCPTR *)(GLuint, GLint, GLsizei, GLboolean, const GLdouble *))IntGetProcAddress("glProgramUniformMatrix4x2dv");
 	if(!_ptrc_glProgramUniformMatrix4x2dv) numFailed++;
 	_ptrc_glProgramUniformMatrix4x2fv = (void (CODEGEN_FUNCPTR *)(GLuint, GLint, GLsizei, GLboolean, const GLfloat *))IntGetProcAddress("glProgramUniformMatrix4x2fv");

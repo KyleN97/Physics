@@ -2,12 +2,13 @@
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
-
+#include <vector>
 class Camera
 {
 public:
 
 	Camera();
+
 	virtual ~Camera();
 
 	virtual void Update(float deltaTime);
@@ -30,15 +31,28 @@ public:
 
 	void Lookat(glm::vec3 target);
 
+	glm::vec3 mouse_click_callback(int mouse_x, int mouse_y);
 	void SetMovementKeys(int forwardKey, int backKey, int leftKey, int rightKey);
 	void SetMouseLookButton(int mouseButton);
 
+	glm::vec3 calculateMouseRay();
+	glm::vec2 getNormalisedDeviceCoordinates(float mouseX, float mouseY);
+
+	glm::vec4 toEyeCoords(glm::vec4 clipCoords);
+	glm::vec3 toWorldCoords(glm::vec4 eyeCoords);
+	glm::vec3 getPointOnRay(glm::vec3 ray, float distance);
+
+	bool intersectionInRange(float start, float finish, glm::vec3 ray);
+	glm::vec3 binarySearch(int count, float start, float finish, glm::vec3 ray);
+	glm::vec3 currentPoint = glm::vec3(0);
 protected:
 
 	void CalculateFront();
 
 protected:
 
+	const int RECURSION_COUNT = 200;
+	const float RAY_RANGE = 600;
 	glm::vec3 m_cameraPosition = glm::vec3(0, 2, -2);
 	glm::vec3 m_cameraFront = glm::vec3(0, 0, 1);
 	glm::vec3 m_cameraUp = glm::vec3(0, 1, 0);
@@ -62,6 +76,9 @@ protected:
 	int m_rightKey;		// defaults to D
 
 	int m_mouseLookButton; // defaults to right mouse button
+
+	int windowWidth = 1280;
+	int windowHeight = 720;
 
 private:
 };

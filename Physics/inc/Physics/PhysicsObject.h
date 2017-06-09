@@ -66,6 +66,7 @@ public:
 	bool GetIsPhysicsEnabled()			const { return isPhysicsEnabled; }
 	bool GetLifetime()					const { return hasLifeTime; }
 
+
 	Collider* GetCollider();//Get the current collider attatched to the current Phys object.
 
 protected:

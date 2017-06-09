@@ -21,9 +21,21 @@ void PhysicsScene::Update(float deltaTime)
 		var->Update(deltaTime);
 		glm::vec3 pos = var->GetPosition();
 		glm::vec3 vel = var->GetVelocity();
-		if (pos.y < 0.5f) {
-			var->SetPosition(glm::vec3(pos.x, 0.5f, pos.z));
+		if (pos.y < 0.3f) {
+			var->SetPosition(glm::vec3(pos.x, 0.3f , pos.z));
 			var->SetVelocity(glm::vec3(vel.x, -vel.y, vel.z));
+		}
+		if (pos.x >= 10.0f)
+		{
+			var->SetPosition(glm::vec3(pos.x, 0.3f, pos.z));
+			//var->SetVelocity(glm::vec3(-vel.x, vel.y, vel.z));
+			var->ApplyForce(glm::vec3(-4000, 0, 0));
+		}
+		if (pos.x <= -10.0f)
+		{
+			var->SetPosition(glm::vec3(pos.x, 0.3f, pos.z));
+			//var->SetVelocity(glm::vec3(-vel.x, vel.y, vel.z));
+			var->ApplyForce(glm::vec3(4000, 0, 0));
 		}
 		if (var->GetLifetime() == true)
 		{
@@ -78,12 +90,12 @@ bool PhysicsScene::isObjectColliding(PhysicsObject * object)
 	{
 		if ((*iter).objA == object)
 		{
-			std::cout << (*iter).objA->GetTag() + " is colliding with " + object->GetTag() << std::endl;
+			//std::cout << (*iter).objA->GetTag() + " is colliding with " + object->GetTag() << std::endl;
 			return true;
 		}
 		else if ((*iter).objB == object)
 		{
-			std::cout << (*iter).objB->GetTag() + " is colliding with " + object->GetTag() << std::endl;
+			//std::cout << (*iter).objB->GetTag() + " is colliding with " + object->GetTag() << std::endl;
 			return true;
 		}
 	}
