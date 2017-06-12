@@ -39,7 +39,7 @@ bool Physics_Walkthrough_App::startup()
 	physicsRenderer = new PhysicsRenderer();
 	physicsScene = new PhysicsScene();
 
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, false));//Create a new phys object with physics
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
 	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(0.3f, 0.3f, 0.3f)));
 	physicsScene->GetObjectAt(0)->SetTag("Cube1");
 

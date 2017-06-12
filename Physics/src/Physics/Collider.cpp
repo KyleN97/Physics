@@ -36,16 +36,19 @@ bool Collider::SphereToSphereIntersect(const SphereCollider * sphere, const Sphe
 
 bool Collider::AABBTOAABBIntersect(const AABBCollider * aabb, const AABBCollider * other,IntersectData* intersect)
 {
-	glm::vec3 collisionVector = other->GetPosition() - aabb->GetPosition();
+	//glm::vec3 collisionVector = other->GetPosition() - aabb->GetPosition();
 	
-	float distance = glm::length(collisionVector);
-	float colDistance = aabb->GetSize().y + other->GetSize().y;
-	collisionVector = glm::normalize(collisionVector) * (colDistance - distance);
-	
-	intersect->collisionVector = collisionVector;
-	bool collision = (aabb->GetPosition().x <= other->GetPosition().x + other->GetSize().x  && aabb->GetPosition().x + aabb->GetSize().x >= other->GetPosition().x) &&
-					 (aabb->GetPosition().y <= other->GetPosition().y + other->GetSize().y  && aabb->GetPosition().y + aabb->GetSize().y >= other->GetPosition().y) &&
-					 (aabb->GetPosition().z <= other->GetPosition().z + other->GetSize().z  && aabb->GetPosition().z + aabb->GetSize().z >= other->GetPosition().z);
+	//float distance = glm::length(collisionVector);
+	//float colDistance = aabb->GetSize().y + other->GetSize().y;
+	//collisionVector = glm::normalize(collisionVector) * (colDistance - distance);
+	//
+	//intersect->collisionVector = collisionVector;
+	bool collision = (aabb->GetPosition().x <= other->GetPosition().x + other->GetSize().x  && 
+					  aabb->GetPosition().x + aabb->GetSize().x >= other->GetPosition().x) &&
+					 (aabb->GetPosition().y <= other->GetPosition().y + other->GetSize().y  && 
+					  aabb->GetPosition().y + aabb->GetSize().y >= other->GetPosition().y) &&
+					 (aabb->GetPosition().z <= other->GetPosition().z + other->GetSize().z  && 
+					  aabb->GetPosition().z + aabb->GetSize().z >= other->GetPosition().z);
 	//std::cout << "collidied = " + std::to_string(collision )<< std::endl;
 	return collision;
 }

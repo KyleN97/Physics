@@ -88,14 +88,8 @@ bool PhysicsScene::isObjectColliding(PhysicsObject * object)
 {
 	for (auto iter = collisions.begin(); iter != collisions.end(); iter++)
 	{
-		if ((*iter).objA == object)
+		if ((*iter).objA == object || (*iter).objB == object)
 		{
-			//std::cout << (*iter).objA->GetTag() + " is colliding with " + object->GetTag() << std::endl;
-			return true;
-		}
-		else if ((*iter).objB == object)
-		{
-			//std::cout << (*iter).objB->GetTag() + " is colliding with " + object->GetTag() << std::endl;
 			return true;
 		}
 	}
