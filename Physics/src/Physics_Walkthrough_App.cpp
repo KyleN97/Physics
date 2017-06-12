@@ -1,3 +1,4 @@
+#define GLM_SWIZZLE
 #include "Physics_Walkthrough_App.h"
 #include "Gizmos.h"
 #include "Input.h"
@@ -11,7 +12,6 @@
 #include "Physics\AABBCollider.h"
 #include "Physics\Spring.h"
 #include <iostream>
-
 #include <imgui.h>
 Physics_Walkthrough_App::Physics_Walkthrough_App()
 {
@@ -44,16 +44,30 @@ bool Physics_Walkthrough_App::startup()
 	physicsScene->GetObjectAt(0)->SetTag("Cube1");
 
 
-	//physicsScene->AttachObject(new PhysicsObject(glm::vec3(0.0f, 10.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
-	//physicsScene->GetObjectAt(1)->SetCollider(new AABBCollider(glm::vec3(0.3f)));
-	//physicsScene->GetObjectAt(1)->SetTag("Cube2");
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 1.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
+	physicsScene->GetObjectAt(1)->SetCollider(new SphereCollider(0.3f));
+	physicsScene->GetObjectAt(1)->SetTag("Marble");
 
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 2.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
+	physicsScene->GetObjectAt(2)->SetCollider(new SphereCollider(0.3f));
+	physicsScene->GetObjectAt(2)->SetTag("Marble");
 
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 3.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
+	physicsScene->GetObjectAt(3)->SetCollider(new SphereCollider(0.3f));
+	physicsScene->GetObjectAt(3)->SetTag("Marble");
+
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 4.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
+	physicsScene->GetObjectAt(4)->SetCollider(new SphereCollider(0.3f));
+	physicsScene->GetObjectAt(4)->SetTag("Marble");
+
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 5.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
+	physicsScene->GetObjectAt(5)->SetCollider(new SphereCollider(0.3f));
+	physicsScene->GetObjectAt(5)->SetTag("Marble");
 	const int maxX = 3;
 	const int maxY = 3;
 	const int maxZ = 3;
 	PhysicsObject* blob[maxX][maxY][maxZ];
-
+	
 	for (int x = 0; x < maxX; x++)	//Do Height Last
 	{
 		for (int y = 0; y < maxY; y++)
@@ -176,12 +190,21 @@ void Physics_Walkthrough_App::update(float deltaTime)
 		spawnAcross--;
 		if (deleteCount >= 0)
 			physicsScene->RemoveObject(physicsScene->GetObjectAt(deleteCount));
+		//for each (PhysicsObject* var in physicsScene->GetObjects())
+		//{
+		//	if (var->GetTag() == "Marble")
+		//	{
+		//		var->ApplyForce(glm::vec3(2000, 0, 0));
+
+		//	}
+		//}
+
 	}
 	if (input->wasKeyPressed(aie::INPUT_KEY_BACKSPACE)) {
 		physicsScene->AttachObject(new PhysicsObject(glm::vec3(spawnAcross, 5.0f, 1.0f), 1.0f, glm::vec3(1.0f), 1.0f));
 		spawnAcross++;
 	}
-	//if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
+	if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
 	//	PhysicsObject* obj = new PhysicsObject(true,2.0f);//enabling physics
 	//	obj->SetPosition(m_camera->GetPosition());
 	//	obj->SetVelocity(m_camera->GetFront() * 20.0f);
@@ -189,7 +212,10 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	//	obj->SetTag("Shotball");
 	//	physicsScene->AttachObject(obj);
 	//	std::cout<< "Shot ball\n";
-	//}
+		int x = input->getMouseX();
+		int y = input->getMouseY();
+
+	}
 
 	ImGui::Begin("Object Manager");
 	static int selection = 0;
@@ -226,6 +252,14 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	m_camera->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
 	physicsScene->AddForceToAllobjects(glm::vec3(0, -9.8f, 0));
 	physicsScene->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
+	
+	for each (PhysicsObject* var in physicsScene->GetObjects())
+	{
+		if ((int)m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()).x  == (int)(var->GetPosition().x))
+		{
+			var->SetPosition(m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()));
+		}
+	}
 }
 
 void Physics_Walkthrough_App::draw()
