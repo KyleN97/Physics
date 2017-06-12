@@ -250,6 +250,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	m_camera->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
 	physicsScene->AddForceToAllobjects(glm::vec3(0, -9.8f, 0));
 	physicsScene->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
+	ImGui::Begin("Object Manipulator");
 	ImGui::Checkbox("Mouse to Drag Objects", &affectObjects);
 	if (affectObjects){
 		for each (PhysicsObject* var in physicsScene->GetObjects())
@@ -260,7 +261,20 @@ void Physics_Walkthrough_App::update(float deltaTime)
 			}
 		}
 	}
-
+	ImGui::End();
+	//ImGui::Begin("Object Data");
+	//for each (PhysicsObject* var in physicsScene->GetObjects())
+	//{
+	//	const char* type = var->GetTag().c_str();
+	//	const char* velocityx = std::to_string(var->GetVelocity().x).c_str();
+	//	const char* velocityy = std::to_string(var->GetVelocity().y).c_str();
+	//	const char* velocityz = std::to_string(var->GetVelocity().z).c_str();
+	//	ImGui::Text(type);
+	//	ImGui::Text(velocityx);
+	//	ImGui::Text(velocityy);
+	//	ImGui::Text(velocityz);
+	//}
+	//ImGui::End();
 }
 
 void Physics_Walkthrough_App::draw()

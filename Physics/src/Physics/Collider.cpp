@@ -87,8 +87,8 @@ bool Collider::SphereToAABBIntersect(const SphereCollider * sphere, const AABBCo
 
 	double squaredDistance = sq;
 
-	glm::vec3 collisionVector = aabb->GetPosition() - sphere->GetPosition();
+	glm::vec3 collisionVector = sphere->GetPosition() + aabb->GetPosition();
 
-
+	intersect->collisionVector = glm::normalize(collisionVector) * (glm::length(collisionVector) * aabb->GetSize() + sphere->GetRadius());
 	return squaredDistance <= (sphere->GetRadius() * sphere->GetRadius());
 }
