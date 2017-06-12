@@ -212,8 +212,6 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	//	obj->SetTag("Shotball");
 	//	physicsScene->AttachObject(obj);
 	//	std::cout<< "Shot ball\n";
-		int x = input->getMouseX();
-		int y = input->getMouseY();
 
 	}
 
@@ -252,14 +250,17 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	m_camera->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
 	physicsScene->AddForceToAllobjects(glm::vec3(0, -9.8f, 0));
 	physicsScene->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
-	
-	for each (PhysicsObject* var in physicsScene->GetObjects())
-	{
-		if ((int)m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()).x  == (int)(var->GetPosition().x))
+	ImGui::Checkbox("Mouse to Drag Objects", &affectObjects);
+	if (affectObjects){
+		for each (PhysicsObject* var in physicsScene->GetObjects())
 		{
-			var->SetPosition(m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()));
+			if ((int)m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()).x == (int)(var->GetPosition().x))
+			{
+				var->SetPosition(m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()));
+			}
 		}
 	}
+
 }
 
 void Physics_Walkthrough_App::draw()

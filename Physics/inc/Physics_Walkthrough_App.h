@@ -27,6 +27,7 @@ protected:
 	float positionObject[3] = { 0 };
 	float lifetimeObject = 0.0f;
 	bool gravityObject = false;
+	bool affectObjects = false;
 	// camera transforms
 	Camera *m_camera = nullptr;
 	PhysicsScene* physicsScene;
