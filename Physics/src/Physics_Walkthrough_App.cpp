@@ -40,7 +40,7 @@ bool Physics_Walkthrough_App::startup()
 	physicsScene = new PhysicsScene();
 
 	physicsScene->AttachObject(new PhysicsObject(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
-	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(0.3f, 0.3f, 0.3f)));
+	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(1.0f, 1.0f, 1.0f)));
 	physicsScene->GetObjectAt(0)->SetTag("Cube1");
 
 
@@ -228,7 +228,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 			PhysicsObject *obj = new PhysicsObject(gravityObject);
 			obj->SetPosition(glm::vec3(positionObject[0], positionObject[1], positionObject[2]));
 			if (selection == 1)
-				obj->SetCollider(new AABBCollider(glm::vec3(0.3f)));
+				obj->SetCollider(new AABBCollider(glm::vec3(1.0f)));
 			else
 				obj->SetCollider(new SphereCollider(0.3f));
 			physicsScene->AttachObject(obj);
@@ -237,7 +237,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 			PhysicsObject *obj = new PhysicsObject(gravityObject, lifetimeObject);
 			obj->SetPosition(glm::vec3(positionObject[0], positionObject[1], positionObject[2]));
 			if (selection == 1)
-				obj->SetCollider(new AABBCollider(glm::vec3(0.3f)));
+				obj->SetCollider(new AABBCollider(glm::vec3(1.0f)));
 			else
 				obj->SetCollider(new SphereCollider(0.3f));
 			physicsScene->AttachObject(obj);
