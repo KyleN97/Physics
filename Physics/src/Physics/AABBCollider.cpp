@@ -1,25 +1,9 @@
 #include "Physics\AABBCollider.h"
 #include "Physics\PhysicsObject.h"
 
-
-AABBCollider::AABBCollider() : size(1.0f), Collider(Type::AABB)
-{
-
-}
-
-AABBCollider::AABBCollider(glm::vec3 _size) : size(_size), Collider(Type::AABB)
-{
-
-}
-
-
-AABBCollider::~AABBCollider()
-{
-}
-
 bool AABBCollider::Intersects(Collider * other,IntersectData* intersect) const
 {
-	switch (other->GetType())
+	switch (other->GetType())//Determine what type of collider this is colliding with and execute the app. function
 	{
 		case Type::AABB:
 			return AABBTOAABBIntersect(this, (AABBCollider*)other,intersect);
@@ -31,7 +15,7 @@ bool AABBCollider::Intersects(Collider * other,IntersectData* intersect) const
 	}
 }
 
-void AABBCollider::Transform(PhysicsObject * object)
+void AABBCollider::Transform(PhysicsObject * object)//Change the transform
 {
 	SetPosition(object->GetPosition());
 }

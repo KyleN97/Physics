@@ -39,35 +39,29 @@ bool Physics_Walkthrough_App::startup()
 	physicsRenderer = new PhysicsRenderer();
 	physicsScene = new PhysicsScene();
 
+	//Create two testing Cubes
 	physicsScene->AttachObject(new PhysicsObject(glm::vec3(5.0f, 0.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
-	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(1.0f, 1.0f, 1.0f)));
+	physicsScene->GetObjectAt(0)->SetCollider(new AABBCollider(glm::vec3(0.3f)));
 	physicsScene->GetObjectAt(0)->SetTag("Cube1");
 
+	physicsScene->AttachObject(new PhysicsObject(glm::vec3(8.0f, 0.0f, 0.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
+	physicsScene->GetObjectAt(1)->SetCollider(new AABBCollider(glm::vec3(0.3f)));
+	physicsScene->GetObjectAt(1)->SetTag("Cube2");
 
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 1.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
-	physicsScene->GetObjectAt(1)->SetCollider(new SphereCollider(0.3f));
-	physicsScene->GetObjectAt(1)->SetTag("Marble");
+	//Create Marbles
+	for (size_t i = 2; i <= 7; i++)
+	{
+		physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, i - 1), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
+		physicsScene->GetObjectAt(i)->SetCollider(new SphereCollider(0.3f));
+		physicsScene->GetObjectAt(i)->SetTag("Marble");
+	}
 
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 2.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
-	physicsScene->GetObjectAt(2)->SetCollider(new SphereCollider(0.3f));
-	physicsScene->GetObjectAt(2)->SetTag("Marble");
 
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 3.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
-	physicsScene->GetObjectAt(3)->SetCollider(new SphereCollider(0.3f));
-	physicsScene->GetObjectAt(3)->SetTag("Marble");
-
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 4.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
-	physicsScene->GetObjectAt(4)->SetCollider(new SphereCollider(0.3f));
-	physicsScene->GetObjectAt(4)->SetTag("Marble");
-
-	physicsScene->AttachObject(new PhysicsObject(glm::vec3(-5.0f, 0.0f, 5.0f), 1.0f, glm::vec3(1.0f), 1.0f, true));//Create a new phys object with physics
-	physicsScene->GetObjectAt(5)->SetCollider(new SphereCollider(0.3f));
-	physicsScene->GetObjectAt(5)->SetTag("Marble");
+#pragma region CreateBlob
 	const int maxX = 3;
 	const int maxY = 3;
 	const int maxZ = 3;
 	PhysicsObject* blob[maxX][maxY][maxZ];
-	
 	for (int x = 0; x < maxX; x++)	//Do Height Last
 	{
 		for (int y = 0; y < maxY; y++)
@@ -157,6 +151,8 @@ bool Physics_Walkthrough_App::startup()
 			}
 		}
 	}
+#pragma endregion
+
 
 	return true;
 }
@@ -172,11 +168,11 @@ void Physics_Walkthrough_App::shutdown()
 
 void Physics_Walkthrough_App::update(float deltaTime)
 {
-
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
+	//Move the first object with UP LEFT DOWN RIGHT - Applying force to it
 	if (input->isKeyDown(aie::INPUT_KEY_UP))
 		physicsScene->GetObjectAt(0)->ApplyForce(glm::vec3(3, 0, 0));//Apply a force to the object
 	if (input->isKeyDown(aie::INPUT_KEY_LEFT))
@@ -185,36 +181,40 @@ void Physics_Walkthrough_App::update(float deltaTime)
 		physicsScene->GetObjectAt(0)->ApplyForce(glm::vec3(-3, 0, 0));//Apply a force to the object
 	if (input->isKeyDown(aie::INPUT_KEY_RIGHT))
 		physicsScene->GetObjectAt(0)->ApplyForce(glm::vec3(0, 0, -3));//Apply a force to the object
+	//Each time enter is pressed it will destroy the latest created item
 	if (input->wasKeyPressed(aie::INPUT_KEY_ENTER)) {
 		deleteCount = physicsScene->GetObjects().size() - 1;
 		spawnAcross--;
 		if (deleteCount >= 0)
 			physicsScene->RemoveObject(physicsScene->GetObjectAt(deleteCount));
-		//for each (PhysicsObject* var in physicsScene->GetObjects())
-		//{
-		//	if (var->GetTag() == "Marble")
-		//	{
-		//		var->ApplyForce(glm::vec3(2000, 0, 0));
-
-		//	}
-		//}
-
 	}
+	 //Will start spawning o0bjects across a grid
 	if (input->wasKeyPressed(aie::INPUT_KEY_BACKSPACE)) {
 		physicsScene->AttachObject(new PhysicsObject(glm::vec3(spawnAcross, 5.0f, 1.0f), 1.0f, glm::vec3(1.0f), 1.0f));
 		spawnAcross++;
 	}
+	//Shoot balls from the camera
 	if (input->wasMouseButtonPressed(aie::INPUT_MOUSE_BUTTON_LEFT)) {
-	//	PhysicsObject* obj = new PhysicsObject(true,2.0f);//enabling physics
-	//	obj->SetPosition(m_camera->GetPosition());
-	//	obj->SetVelocity(m_camera->GetFront() * 20.0f);
-	//	obj->SetCollider(new SphereCollider(0.5f));
-	//	obj->SetTag("Shotball");
-	//	physicsScene->AttachObject(obj);
-	//	std::cout<< "Shot ball\n";
-
+		PhysicsObject* obj = new PhysicsObject(true,2.0f);//enabling physics
+		obj->SetPosition(m_camera->GetPosition());
+		obj->SetVelocity(m_camera->GetFront() * 20.0f);
+		obj->SetCollider(new SphereCollider(0.5f));
+		obj->SetTag("Shotball");
+		physicsScene->AttachObject(obj);
+	}
+	//Apply force to the Marbles
+	if (input->wasKeyPressed(aie::INPUT_KEY_LEFT_SHIFT))
+	{
+		for each (PhysicsObject* var in physicsScene->GetObjects())
+		{
+			if (var->GetTag() == "Marble")
+			{
+				var->ApplyForce(glm::vec3(2000, 0, 0));
+			}
+		}
 	}
 
+	//Create Objects
 	ImGui::Begin("Object Manager");
 	static int selection = 0;
 	const char* listOfItems[] = { "Sphere","AABB" };
@@ -228,7 +228,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 			PhysicsObject *obj = new PhysicsObject(gravityObject);
 			obj->SetPosition(glm::vec3(positionObject[0], positionObject[1], positionObject[2]));
 			if (selection == 1)
-				obj->SetCollider(new AABBCollider(glm::vec3(1.0f)));
+				obj->SetCollider(new AABBCollider(glm::vec3(0.3f)));
 			else
 				obj->SetCollider(new SphereCollider(0.3f));
 			physicsScene->AttachObject(obj);
@@ -237,7 +237,7 @@ void Physics_Walkthrough_App::update(float deltaTime)
 			PhysicsObject *obj = new PhysicsObject(gravityObject, lifetimeObject);
 			obj->SetPosition(glm::vec3(positionObject[0], positionObject[1], positionObject[2]));
 			if (selection == 1)
-				obj->SetCollider(new AABBCollider(glm::vec3(1.0f)));
+				obj->SetCollider(new AABBCollider(glm::vec3(0.3f)));
 			else
 				obj->SetCollider(new SphereCollider(0.3f));
 			physicsScene->AttachObject(obj);
@@ -246,33 +246,38 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	}
 	ImGui::End();
 
+	//Physics Demo Operations
+	ImGui::Begin("Demos - 6 Second Lifetime");
+	if (ImGui::Button("AABB vs Sphere"))
+	{
+		PhysicsObject *obj = new PhysicsObject(true,6.0f);
+		obj->SetPosition(glm::vec3(5.0f,5.0f,0.0f));
+		obj->SetCollider(new SphereCollider(0.3f));
+		physicsScene->AttachObject(obj);
+	}
+	if (ImGui::Button("AABB vs AABB"))
+	{
+		PhysicsObject *obj = new PhysicsObject(true, 6.0f);
+		obj->SetPosition(glm::vec3(8.0f, 5.0f, 0.0f));
+		obj->SetCollider(new AABBCollider(glm::vec3(0.3f)));
+		physicsScene->AttachObject(obj);
+	}
+	ImGui::End();
 
 	m_camera->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
 	physicsScene->AddForceToAllobjects(glm::vec3(0, -9.8f, 0));
 	physicsScene->Update(0.016f);//Passing in delta time no need for physics as if we drag window time between frames will be massive and cause everything to fling around
-	ImGui::Begin("Object Manipulator");
-	ImGui::Checkbox("Mouse to Drag Objects", &affectObjects);
-	if (affectObjects){
-		for each (PhysicsObject* var in physicsScene->GetObjects())
-		{
-			if ((int)m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()).x == (int)(var->GetPosition().x))
-			{
-				var->SetPosition(m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()));
-			}
-		}
-	}
-	ImGui::End();
-	//ImGui::Begin("Object Data");
-	//for each (PhysicsObject* var in physicsScene->GetObjects())
-	//{
-	//	const char* type = var->GetTag().c_str();
-	//	const char* velocityx = std::to_string(var->GetVelocity().x).c_str();
-	//	const char* velocityy = std::to_string(var->GetVelocity().y).c_str();
-	//	const char* velocityz = std::to_string(var->GetVelocity().z).c_str();
-	//	ImGui::Text(type);
-	//	ImGui::Text(velocityx);
-	//	ImGui::Text(velocityy);
-	//	ImGui::Text(velocityz);
+	
+	//ImGui::Begin("Object Manipulator");
+	//ImGui::Checkbox("Mouse to Drag Objects", &affectObjects);
+	//if (affectObjects){
+	//	for each (PhysicsObject* var in physicsScene->GetObjects())
+	//	{
+	//		if ((int)m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()).x == (int)(var->GetPosition().x))
+	//		{
+	//			var->SetPosition(m_camera->mouse_click_callback(input->getMouseX(), input->getMouseY()));
+	//		}
+	//	}
 	//}
 	//ImGui::End();
 }
@@ -284,7 +289,7 @@ void Physics_Walkthrough_App::draw()
 	// wipe the gizmos clean for this frame
 	aie::Gizmos::clear();
 	RenderGizmosGrid();
-	physicsRenderer->Draw(physicsScene);
+	physicsRenderer->Draw(physicsScene);//Use the phys renderer to draw the phys objects
 	aie::Gizmos::draw(m_camera->GetProjectionView());
 
 }

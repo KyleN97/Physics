@@ -1,5 +1,5 @@
 #pragma once
-#include <glm\glm.hpp>
+#include <glm\vec3.hpp>
 class IntersectData {
 public:
 	glm::vec3 collisionVector;

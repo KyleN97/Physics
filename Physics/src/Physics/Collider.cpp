@@ -3,15 +3,7 @@
 #include "Physics\AABBCollider.h"
 #include "Physics\IntersectData.h"
 #include <glm\vec3.hpp>
-Collider::Collider(Type _type) : type(_type)
-{
-
-}
-
-
-Collider::~Collider()
-{
-}
+#include <glm\geometric.hpp>
 
 Collider * Collider::GetNullInstance()
 {
@@ -23,37 +15,28 @@ Collider * Collider::GetNullInstance()
 bool Collider::SphereToSphereIntersect(const SphereCollider * sphere, const SphereCollider * other,IntersectData* intersect)
 {
 	glm::vec3 collisionVector = other->GetPosition() - sphere->GetPosition();
-	//std::cout << "Detecting Sphere\n";
 
-	float distance = glm::length(collisionVector);
-	float colDistance = sphere->GetRadius() + other->GetRadius();
+	float distance = glm::length(collisionVector);//Distance between the two objects
+
+	float colDistance = sphere->GetRadius() + other->GetRadius();//Collision distance - radius + radius
 
 	collisionVector =  glm::normalize(collisionVector) * (colDistance - distance);
 	intersect->collisionVector = collisionVector;
-	return distance <= colDistance;
+	return distance <= colDistance;//Check wether the sphere is within collision distance return true if colliding - false if not
 }
 
 
 bool Collider::AABBTOAABBIntersect(const AABBCollider * aabb, const AABBCollider * other,IntersectData* intersect)
 {
-	//glm::vec3 collisionVector = other->GetPosition() - aabb->GetPosition();
-	//
-	//float distance = glm::length(collisionVector);
-	//float colDistance = aabb->GetSize().y + other->GetSize().y;
-	//collisionVector = glm::normalize(collisionVector) * (colDistance - distance);
-	//intersect->collisionVector = collisionVector;
 	bool collision = ((other->GetPosition().x + other->GetSize().x) >= (aabb->GetPosition().x - aabb->GetSize().x) && (aabb->GetPosition().x + aabb->GetSize().x) >= (other->GetPosition().x - other->GetSize().x)) &&
 					 ((other->GetPosition().y + other->GetSize().y) >= (aabb->GetPosition().y - aabb->GetSize().y) && (aabb->GetPosition().y + aabb->GetSize().y) >= (other->GetPosition().y - other->GetSize().y)) &&
 					 ((other->GetPosition().z + other->GetSize().z) >= (aabb->GetPosition().z - aabb->GetSize().z) && (aabb->GetPosition().z + aabb->GetSize().z) >= (other->GetPosition().z - other->GetSize().z));
-	return collision;
+	return collision;//Check the points of the AABB's and check if they are overlapping
 }
 
 bool Collider::SphereToAABBIntersect(const SphereCollider * sphere, const AABBCollider * aabb,IntersectData* intersect)
 {
-	auto check = [&](
-		const double pn,
-		const double bmin,
-		const double bmax) -> double
+	auto check = [&](const double pn,const double bmin,const double bmax) -> double
 	{
 		double out = 0;
 		double v = pn;
@@ -71,7 +54,7 @@ bool Collider::SphereToAABBIntersect(const SphereCollider * sphere, const AABBCo
 		}
 
 		return out;
-	};
+	};//Check the spheres position against each point in the AABB
 
 	// Squared distance
 	double sq = 0.0;
@@ -79,11 +62,7 @@ bool Collider::SphereToAABBIntersect(const SphereCollider * sphere, const AABBCo
 	sq += check(sphere->GetPosition().x, aabb->GetPosition().x, aabb->GetPosition().x + aabb->GetSize().x);
 	sq += check(sphere->GetPosition().y, aabb->GetPosition().y, aabb->GetPosition().y + aabb->GetSize().y);
 	sq += check(sphere->GetPosition().z, aabb->GetPosition().z, aabb->GetPosition().z + aabb->GetSize().z);
+	
 
-	double squaredDistance = sq;
-
-	glm::vec3 collisionVector = sphere->GetPosition() + aabb->GetPosition();
-
-	intersect->collisionVector = glm::normalize(collisionVector) * (glm::length(collisionVector) * aabb->GetSize() + sphere->GetRadius());
-	return squaredDistance <= (sphere->GetRadius() * sphere->GetRadius());
+	return sq <= (sphere->GetRadius() * sphere->GetRadius());//Check the returned results against the sphere
 }

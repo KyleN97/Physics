@@ -1,20 +1,5 @@
 #include "Physics\Spring.h"
 #include "Physics\PhysicsObject.h"
-Spring::Spring(PhysicsObject * objA, PhysicsObject * objB) : Constraint(std::vector<PhysicsObject*> {objA, objB},Constraint::Type::SPRING)
-{
-}
-
-Spring::Spring(PhysicsObject * objA, PhysicsObject * objB, float _length, float _stiffness, float _friction) : 
-Constraint(std::vector<PhysicsObject*> {objA, objB}, Constraint::Type::SPRING),
-length(_length),
-stiffness(_stiffness),
-friction(_friction)
-{
-}
-
-Spring::~Spring() {
-
-}
 
 void Spring::Update(float deltaTime)
 {

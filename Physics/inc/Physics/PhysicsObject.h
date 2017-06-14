@@ -1,5 +1,6 @@
 #pragma once
-#include <glm\glm.hpp>
+#include <glm\vec3.hpp>
+#include <glm\geometric.hpp>
 #include <string>
 class Collider;
 class PhysicsObject
@@ -40,9 +41,12 @@ public:
 		this->SetTag(_tag);
 		this->SetIsPhysicsEnabled(_isPhysicsEnabled);
 	}
+	
+	PhysicsObject() {};
 
-	PhysicsObject();
-	~PhysicsObject();
+	~PhysicsObject() {
+		delete collider;
+	};
 
 	void Update(float deltaTime);
 	void ApplyForce(glm::vec3 force);//Apply force to an object with a certain force

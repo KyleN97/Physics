@@ -2,15 +2,6 @@
 #include "Physics\PhysicsObject.h"
 
 
-SphereCollider::SphereCollider(float _radius) : radius(_radius), Collider(Type::SPHERE)
-{
-
-}
-
-SphereCollider::SphereCollider() : radius(1.0f), Collider(Type::SPHERE)
-{
-
-}
 bool SphereCollider::Intersects(Collider * other, IntersectData* intersect) const
 {
 	switch (other->GetType())
@@ -23,7 +14,7 @@ bool SphereCollider::Intersects(Collider * other, IntersectData* intersect) cons
 		break;
 	default:
 		return false;
-	}
+	}//Determine what type of collider this is colliding with and execute the app. function
 }
 
 void SphereCollider::Transform(PhysicsObject * object)

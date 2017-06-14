@@ -2,41 +2,44 @@
 #include "Physics\Collider.h"
 #include <iostream>
 
-PhysicsScene::PhysicsScene()
-{
-}
-
 void PhysicsScene::Update(float deltaTime)
 {
-	//updatae constraints
+	//update constraints
 	for each (Constraint* con in constraints)
 	{
-		con->Update(deltaTime);//make sure this update is using deltatime.... or remove it
+		con->Update(deltaTime);
 	}
-	//
 	for each (PhysicsObject* var in objects) {
-		glm::vec3 currAccel = var->GetAcceleration();
-		var->SetAcceleration(currAccel + gravAccel);
-		var->ApplyForce(globalForce);
-		var->Update(deltaTime);
+		glm::vec3 currAccel = var->GetAcceleration();//Grab the objects current acceleration
+		var->SetAcceleration(currAccel + gravAccel);//Set its accelartion to its current + gravity
+		var->ApplyForce(globalForce);//Apply the global gravity to it
+		var->Update(deltaTime);//Update the object
 		glm::vec3 pos = var->GetPosition();
 		glm::vec3 vel = var->GetVelocity();
+		//Grab the objects position and velocity
 		if (pos.y < 0.3f) {
 			var->SetPosition(glm::vec3(pos.x, 0.3f , pos.z));
 			var->SetVelocity(glm::vec3(vel.x, -vel.y, vel.z));
 		}
-		if (pos.x >= 10.0f)
+#pragma region Marbles
+		if (var->GetTag() == "Marble")
 		{
-			var->SetPosition(glm::vec3(pos.x, 0.3f, pos.z));
-			//var->SetVelocity(glm::vec3(-vel.x, vel.y, vel.z));
-			var->ApplyForce(glm::vec3(-4000, 0, 0));
+			if (pos.x >= 10.0f)
+			{
+				var->SetPosition(glm::vec3(pos.x, 0.3f, pos.z));
+				//var->SetVelocity(glm::vec3(-vel.x, vel.y, vel.z));
+				var->ApplyForce(glm::vec3(-4000, 0, 0));
+			}
+			if (pos.x <= -10.0f)
+			{
+				var->SetPosition(glm::vec3(pos.x, 0.3f, pos.z));
+				//var->SetVelocity(glm::vec3(-vel.x, vel.y, vel.z));
+				var->ApplyForce(glm::vec3(4000, 0, 0));
+			}
 		}
-		if (pos.x <= -10.0f)
-		{
-			var->SetPosition(glm::vec3(pos.x, 0.3f, pos.z));
-			//var->SetVelocity(glm::vec3(-vel.x, vel.y, vel.z));
-			var->ApplyForce(glm::vec3(4000, 0, 0));
-		}
+		//If the object is a marble apply a force to it to keep bouncing off walls
+#pragma endregion
+
 		if (var->GetLifetime() == true)
 		{
 			var->SetLifeTime(var->GetRemainingLifetime() - deltaTime, true);
@@ -45,30 +48,22 @@ void PhysicsScene::Update(float deltaTime)
 				RemoveObject(var);
 				break;
 			}
-		}
+		}//If the object is simulating lifetime determine wether it has any left if not destroy it
 	}
-	globalForce = glm::vec3();
+	globalForce = glm::vec3();//Reset the global force
 	DetectCollisions();
 	ResolveCollisions();
-
+	//Detect any collisions and then resolve them
 }
 
 void PhysicsScene::AttachObject(PhysicsObject * object)
 {
-	objects.push_back(object);
-}
-
-void PhysicsScene::AttachAllObjects(std::vector<PhysicsObject*> objects)
-{
-	for each (PhysicsObject* var in objects)
-	{
-		AttachObject(var);
-	}
+	objects.push_back(object);//Push the object back into the vector
 }
 
 void PhysicsScene::AddForceToAllobjects(const glm::vec3& force)
 {
-	globalForce = force;
+	globalForce = force;//Set the global force
 }
 
 void PhysicsScene::RemoveObject(PhysicsObject * object)
@@ -81,7 +76,7 @@ void PhysicsScene::RemoveObject(PhysicsObject * object)
 			objects.erase(iter);
 			break;
 		}
-	}
+	}//Find the certain object and then destroy it
 }
 
 bool PhysicsScene::isObjectColliding(PhysicsObject * object)
@@ -102,6 +97,7 @@ void PhysicsScene::AttatchConstraint(Constraint * con)
 	if (iter == constraints.end()) {
 		constraints.push_back(con);
 	}
+	//Push back the constraint into the vector
 }
 
 void PhysicsScene::RemoveConstraint(Constraint * con)
@@ -111,6 +107,7 @@ void PhysicsScene::RemoveConstraint(Constraint * con)
 		delete *iter;
 		constraints.erase(iter);
 	}
+	//Find the certain constraint and then destroy it
 }
 
 void PhysicsScene::DetectCollisions()
@@ -124,13 +121,12 @@ void PhysicsScene::DetectCollisions()
 			PhysicsObject* objB = *iterB;
 			CollisionInfo info;
 
-			if (objA->GetCollider()->Intersects(objB->GetCollider(), &info.intersect))
+			if (objA->GetCollider()->Intersects(objB->GetCollider(), &info.intersect))//If objects are intersecting push it back into the collision list
 			{
 				info.objA = objA;
 				info.objB = objB;
 				collisions.push_back(info);
 			}
-
 		}
 	}
 }
@@ -164,7 +160,8 @@ void PhysicsScene::ResolveCollisions()
 		iter->objB->SetPosition(iter->objB->GetPosition() + seperate);
 
 		//Change from set position make it dependent on objects mass etc - Massive object vs small object
-
+		
+		//Go through all collision and applyforce and impacts to the objects based on the intersect data from their collisions
 	}
 }
 
