@@ -43,10 +43,7 @@ public:
 	}
 	
 	PhysicsObject() {};
-
-	~PhysicsObject() {
-		delete collider;
-	};
+	~PhysicsObject();
 
 	void Update(float deltaTime);
 	void ApplyForce(glm::vec3 force);//Apply force to an object with a certain force

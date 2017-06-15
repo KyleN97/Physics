@@ -9,7 +9,7 @@ public:
 		SPRING,
 		JOINT
 	};//Type of constraint
-	Constraint() {}
+	Constraint();
 	Constraint(std::vector<PhysicsObject*>& _objects, Type _type) : objects(_objects), type(_type){}
 	virtual ~Constraint() {}
 	virtual void Update(float deltaTime) = 0;//Update the constraint

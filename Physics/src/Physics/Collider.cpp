@@ -5,6 +5,11 @@
 #include <glm\vec3.hpp>
 #include <glm\geometric.hpp>
 
+Collider::~Collider()
+{
+
+}
+
 Collider * Collider::GetNullInstance()
 {
 	static Collider collider(Type::NONE);

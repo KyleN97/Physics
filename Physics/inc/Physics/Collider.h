@@ -13,7 +13,7 @@ public:
 		OBB
 	};//Type of collider
 	Collider(Type _type) : type(_type){}
-	virtual ~Collider() {};
+	virtual ~Collider();
 	Type GetType() const { return type; }
 	virtual bool Intersects(Collider* other, IntersectData* intersect) const { return false; };//Intersections
 	static Collider* GetNullInstance();//Collider is NULL?

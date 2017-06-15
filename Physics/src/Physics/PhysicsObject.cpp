@@ -22,7 +22,11 @@ void PhysicsObject::SetCollider(Collider * _collider)
 	collider->Transform(this);
 	//Set the collider of this phys object
 }
-void PhysicsObject::Update(float deltaTime) 
+PhysicsObject::~PhysicsObject()
+{
+	delete collider;
+}
+void PhysicsObject::Update(float deltaTime)
 {
 	if (this->GetIsPhysicsEnabled()) {
 		ApplyForce(-velocity * friction);//Slow the object down according to friction

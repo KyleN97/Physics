@@ -19,14 +19,18 @@ public:
 
 	void RenderGizmosGrid();
 protected:
-	int spawnAcross = 0;
-	int deleteCount = 0;
-	float positionObject[3] = { 0 };
-	float lifetimeObject = 0.0f;
-	bool gravityObject = false;
-	bool affectObjects = false;
+	int spawnAcross = 0;//Where to spawn items across the grid
+	int deleteCount = 0;//The deletion count
+	float positionObject[3] = { 0 };//Poisiton of object from GUI spawning
+	float lifetimeObject = 0.0f;//lifetime of the GUI objects
+	bool gravityObject = false;//gravity of the GUI objects
+	bool affectObjects = false;//Used for mouse affecting objects
 	// camera transforms
 	Camera *m_camera = nullptr;
 	PhysicsScene* physicsScene;
 	PhysicsRenderer* physicsRenderer;
+	//Frames per second debugging
+	int nbFrames = 0;
+	int lastTime = 0;
+	//
 };

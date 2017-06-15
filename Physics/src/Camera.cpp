@@ -155,8 +155,8 @@ glm::vec3 Camera::mouse_click_callback(int mouse_x, int mouse_y)
 
 glm::vec3 Camera::calculateMouseRay() {
 	aie::Input* input = aie::Input::getInstance();
-	float mouseX = input->getMouseX();
-	float mouseY = input->getMouseY();
+	int mouseX = input->getMouseX();
+	int mouseY = input->getMouseY();
 	glm::vec2 normalizedCoords = getNormalisedDeviceCoordinates(mouseX, mouseY);
 	glm::vec4 clipCoords = glm::vec4(normalizedCoords.x, normalizedCoords.y, -1.0f, 1.0f);
 	glm::vec4 eyeCoords = toEyeCoords(clipCoords);

@@ -13,6 +13,7 @@
 #include "Physics\Spring.h"
 #include <iostream>
 #include <imgui.h>
+#include <GLFW\glfw3.h>
 Physics_Walkthrough_App::Physics_Walkthrough_App()
 {
 
@@ -70,7 +71,7 @@ bool Physics_Walkthrough_App::startup()
 			{
 				PhysicsObject *obj = new PhysicsObject(true);
 				obj->SetPosition(glm::vec3(x, y, z));
-				obj->SetTag("Blob ball " + std::to_string(x) + std::to_string(y) + std::to_string(z));
+				obj->SetTag("Blob ball");
 				obj->SetCollider(new SphereCollider(0.3f));
 				blob[x][y][z] = obj;
 				physicsScene->AttachObject(obj);
@@ -185,12 +186,35 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	if (input->wasKeyPressed(aie::INPUT_KEY_ENTER)) {
 		deleteCount = physicsScene->GetObjects().size() - 1;
 		spawnAcross--;
-		if (deleteCount >= 0)
-			physicsScene->RemoveObject(physicsScene->GetObjectAt(deleteCount));
+		if (deleteCount >= 0) {
+			if (physicsScene->GetObjectAt(deleteCount)->GetTag() == "Blob ball")
+			{
+				std::vector<PhysicsObject*> objects = physicsScene->GetObjects();
+				for each (PhysicsObject* var in objects)
+				{
+					if (var->GetTag() == "Blob ball")
+					{
+						physicsScene->RemoveObject(var);
+					}
+				}
+				std::vector<Constraint*> constraints = physicsScene->GetConstraints();
+				for each (Constraint* var in constraints)
+				{
+					physicsScene->RemoveConstraint(var);
+				}
+			}//If it is the blob delete it and all of its constraints
+			else {
+				physicsScene->RemoveObject(physicsScene->GetObjectAt(deleteCount));
+			}
+		}
+
 	}
 	 //Will start spawning o0bjects across a grid
 	if (input->wasKeyPressed(aie::INPUT_KEY_BACKSPACE)) {
-		physicsScene->AttachObject(new PhysicsObject(glm::vec3(spawnAcross, 5.0f, 1.0f), 1.0f, glm::vec3(1.0f), 1.0f));
+		PhysicsObject* obj = new PhysicsObject(glm::vec3(spawnAcross, 5.0f, 1.0f), 1.0f, glm::vec3(1.0f), 1.0f,true);
+		physicsScene->AttachObject(obj);
+		obj->SetCollider(new SphereCollider(0.3f));
+		obj->SetLifeTime(5.0f, true);
 		spawnAcross++;
 	}
 	//Shoot balls from the camera
@@ -280,6 +304,14 @@ void Physics_Walkthrough_App::update(float deltaTime)
 	//	}
 	//}
 	//ImGui::End();
+	double currentTime = glfwGetTime();
+	nbFrames++;
+	if (currentTime - lastTime >= 1.0)
+	{
+		std::cout << "FPS - " << nbFrames << std::endl;
+		nbFrames = 0;
+		lastTime += 1.0;
+	}
 }
 
 void Physics_Walkthrough_App::draw()
